@@ -21,7 +21,7 @@ public class Main {
             }
 
             else if(input.charAt(i) == ')'){
-                if(stack.peek() == '(') stack.pop();
+                if(stack.isEmpty() || stack.peek() == '(') stack.pop();
                 else return "No";
             }
         }
