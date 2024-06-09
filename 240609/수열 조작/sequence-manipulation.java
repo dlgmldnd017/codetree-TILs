@@ -7,7 +7,7 @@ public class Main {
 
         int N = Integer.parseInt(br.readLine());
 
-        Deque<Integer> dq = new LinkedList<>();
+        Deque<Integer> dq = new ArrayDeque<>();
 
         for(int i=1; i<=N; i++){
             dq.add(i);
