@@ -15,11 +15,7 @@ public class Main {
 
         while(dq.size() != 1){
             dq.pollFirst();
-            
-            if(dq.size()==1) break;
-
-            int tmp = dq.pollFirst();
-            dq.addLast(tmp);
+            dq.addLast(dq.pollFirst());
         }
 
         System.out.println(dq.peek());
