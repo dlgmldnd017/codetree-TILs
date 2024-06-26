@@ -2,9 +2,10 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int n, k, count=0, arr[];
+    static int n, k, count = 0;
+    static int[] arr;
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
@@ -14,24 +15,30 @@ public class Main {
 
         arr = new int[n];
         st = new StringTokenizer(br.readLine());
-        for(int i=0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        solve(0, 0, 0);
+        // 배열을 정렬합니다.
+        Arrays.sort(arr);
+
+        // 투 포인터 방법을 사용합니다.
+        int left = 0;
+        int right = n - 1;
+
+        while (left < right) {
+            int sum = arr[left] + arr[right];
+            if (sum == k) {
+                count++;
+                left++;
+                right--;
+            } else if (sum < k) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+
         System.out.println(count);
-    }
-
-    static void solve(int depth, int sum, int idx){
-        if(sum > k) return;
-
-        if(depth==2){
-            if(sum == k) count++;
-            return;
-        }
-
-        for(int i=idx; i<n; i++){
-            solve(depth+1, sum+arr[i], i+1);
-        }
     }
 }
