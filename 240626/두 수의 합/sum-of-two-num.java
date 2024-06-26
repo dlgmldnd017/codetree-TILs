@@ -2,43 +2,33 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int n, k, count = 0;
-    static int[] arr;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
         st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        k = Integer.parseInt(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
 
-        arr = new int[n];
+        long[] arr = new long[n];
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < n; i++) {
+        for(int i=0; i<n; i++){
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        // 배열을 정렬합니다.
-        Arrays.sort(arr);
+        int ans=0;
 
-        // 투 포인터 방법을 사용합니다.
-        int left = 0;
-        int right = n - 1;
+        HashMap<Long, Integer> map = new HashMap<>();
+        for(int i=0; i<n; i++){
+            long diff = k-arr[i];
 
-        while (left < right) {
-            int sum = arr[left] + arr[right];
-            if (sum == k) {
-                count++;
-                left++;
-                right--;
-            } else if (sum < k) {
-                left++;
-            } else {
-                right--;
-            }
+            if(map.containsKey(diff)) ans += map.get(diff);
+
+            if(!map.containsKey(arr[i])) map.put(arr[i], 1);
+            else map.put(arr[i], map.get(arr[i])+1);
         }
 
-        System.out.println(count);
+        System.out.println(ans);
     }
 }
