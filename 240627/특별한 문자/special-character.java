@@ -17,7 +17,10 @@ public class Main {
 
         char ans = ' ';
         for(Map.Entry<Character, Integer> entry : map.entrySet()){
-            if(entry.getValue() == 1) ans = entry.getKey();
+            if(entry.getValue() == 1) {
+                ans = entry.getKey();
+                break;
+            }
         }
 
         if(ans == ' ') System.out.println("None");
