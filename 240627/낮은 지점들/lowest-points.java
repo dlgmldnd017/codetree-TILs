@@ -12,8 +12,8 @@ public class Main {
 
         for(int i=0; i<n; i++){
             st = new StringTokenizer(br.readLine());
-            long x = Integer.parseInt(st.nextToken());
-            long y = Integer.parseInt(st.nextToken());
+            long x = Long.parseLong(st.nextToken());
+            long y = Long.parseLong(st.nextToken());
 
             if(map.containsKey(x)) {
                 if(map.get(x) > y) map.put(x, y);
