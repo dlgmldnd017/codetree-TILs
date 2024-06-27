@@ -23,7 +23,7 @@ public class Main {
             } 
         }
 
-        int ans = 0;
+        long ans = 0;
         for(Map.Entry<Long, Long> entry : map.entrySet()){
             ans += entry.getValue();
         }
