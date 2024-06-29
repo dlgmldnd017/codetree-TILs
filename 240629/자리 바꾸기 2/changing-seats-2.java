@@ -19,7 +19,7 @@ public class Main {
             position[i] = i;
         }
 
-        int map[][] = new int[N][N];
+        int map[][] = new int[K][2];
 
         for(int i=0; i<K; i++){
             st = new StringTokenizer(br.readLine());
