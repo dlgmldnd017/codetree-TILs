@@ -35,9 +35,15 @@ public class Main {
             changed = false;
 
             for(Set<Integer> group : groups){
-                long count = group.stream().filter(invited::contains).count();
+                long count = 0;
+
+                for (int person : group) {
+                    if (invited.contains(person)) {
+                        count++;
+                    }
+                }
                 
-                
+            
                 if (count == group.size() - 1) {
                     for (int person : group) {
                         if (!invited.contains(person)) {
