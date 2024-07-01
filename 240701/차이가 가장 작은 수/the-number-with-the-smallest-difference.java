@@ -15,17 +15,27 @@ public class Main {
 
         TreeSet<Integer> set = new TreeSet<>();
 
+        int arr[] = new int[n];
+
+
         for(int i=0; i<n; i++){
             int x = Integer.parseInt(br.readLine());
 
+            arr[i] = x;
             set.add(x);
         }
 
-        int x = (Math.abs(set.last())) - (Math.abs(set.first()));
+        int minDiff = Integer.MAX_VALUE;
 
-        if(x>=m) sb.append(x);
-        else sb.append(-1);
+        for(int i=0; i<n; i++){
+            Integer x = set.ceiling(arr[i]+m);
 
+            if(x != null) minDiff = Math.min(minDiff, x - arr[i]);
+        }
+
+        if(minDiff == Integer.MAX_VALUE) sb.append(-1);
+        else sb.append(minDiff);
+        
         System.out.println(sb);
     }
 }
