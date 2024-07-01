@@ -21,7 +21,7 @@ public class Main {
             set.add(x);
         }
 
-        int x = set.last() - set.first();
+        int x = set.last() - (Math.abs(set.first()));
 
         if(x>=m) sb.append(x);
         else sb.append(-1);
