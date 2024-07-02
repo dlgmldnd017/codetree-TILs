@@ -1,8 +1,23 @@
 import java.util.*;
 
 public class Main {
-    static int[] parent;
-    static int[] size;
+    static class Interval implements Comparable<Interval> {
+        int start, end, length;
+
+        public Interval(int start, int end) {
+            this.start = start;
+            this.end = end;
+            this.length = end - start + 1;
+        }
+
+        @Override
+        public int compareTo(Interval other) {
+            if (this.length == other.length) {
+                return this.start - other.start;
+            }
+            return other.length - this.length; // length 내림차순, 길이가 같으면 시작값 오름차순
+        }
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -15,68 +30,47 @@ public class Main {
             toRemove[i] = scanner.nextInt();
         }
 
-        // 초기화
-        parent = new int[n + 1];
-        size = new int[n + 1];
-        Arrays.fill(size, 1);
-
-        for (int i = 0; i <= n; i++) {
-            parent[i] = i;
-        }
-
+        // 초기 숫자 집합 생성
         TreeSet<Integer> numbers = new TreeSet<>();
         for (int i = 0; i <= n; i++) {
             numbers.add(i);
         }
 
+        // 구간들을 저장할 TreeSet
+        TreeSet<Interval> intervals = new TreeSet<>();
+        intervals.add(new Interval(0, n));
+
         // 각 숫자를 제거하면서 최장 연속 수열 길이 계산
         for (int i = 0; i < m; i++) {
-            numbers.remove(toRemove[i]);
-            if (numbers.isEmpty()) {
-                System.out.println(0);
-                continue;
-            }
+            int removeNum = toRemove[i];
+            numbers.remove(removeNum);
 
-            // Union-Find를 사용하여 최장 연속 수열 길이 계산
-            for (int num : numbers) {
-                if (numbers.contains(num - 1)) {
-                    union(num - 1, num);
-                }
-                if (numbers.contains(num + 1)) {
-                    union(num, num + 1);
+            // 제거된 숫자가 포함된 구간 찾기
+            Interval toRemoveInterval = null;
+            for (Interval interval : intervals) {
+                if (interval.start <= removeNum && removeNum <= interval.end) {
+                    toRemoveInterval = interval;
+                    break;
                 }
             }
 
-            int maxLength = 0;
-            for (int num : numbers) {
-                maxLength = Math.max(maxLength, size[find(num)]);
+            // 구간 분리 및 재삽입
+            if (toRemoveInterval != null) {
+                intervals.remove(toRemoveInterval);
+
+                if (toRemoveInterval.start < removeNum) {
+                    intervals.add(new Interval(toRemoveInterval.start, removeNum - 1));
+                }
+                if (removeNum < toRemoveInterval.end) {
+                    intervals.add(new Interval(removeNum + 1, toRemoveInterval.end));
+                }
             }
+
+            // 최장 연속 수열 길이 계산
+            int maxLength = intervals.isEmpty() ? 0 : intervals.first().length;
             System.out.println(maxLength);
-
-            // 제거된 숫자를 복원
-            for (int num : numbers) {
-                parent[num] = num;
-                size[num] = 1;
-            }
         }
 
         scanner.close();
-    }
-
-    public static int find(int x) {
-        if (parent[x] != x) {
-            parent[x] = find(parent[x]);
-        }
-        return parent[x];
-    }
-
-    public static void union(int x, int y) {
-        int rootX = find(x);
-        int rootY = find(y);
-
-        if (rootX != rootY) {
-            parent[rootY] = rootX;
-            size[rootX] += size[rootY];
-        }
     }
 }
