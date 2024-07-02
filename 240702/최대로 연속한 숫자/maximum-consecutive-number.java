@@ -1,76 +1,58 @@
 import java.util.*;
+import java.io.*;
 
-public class Main {
-    static class Interval implements Comparable<Interval> {
-        int start, end, length;
+class Tuple implements Comparable<Tuple>{
+    int len, start, end;
 
-        public Interval(int start, int end) {
-            this.start = start;
-            this.end = end;
-            this.length = end - start + 1;
-        }
-
-        @Override
-        public int compareTo(Interval other) {
-            if (this.length == other.length) {
-                return this.start - other.start;
-            }
-            return other.length - this.length; // length 내림차순, 길이가 같으면 시작값 오름차순
-        }
+    public Tuple(int len, int start, int end){
+        this.len = len;
+        this.start = start;
+        this.end = end;
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    @Override
+    public int compareTo(Tuple t){
+        if(t.len != this.len) return t.len - this.len;
+        else if(this.start != this.start) return this.start - t.start;
+        else return this.end - t.end;
+    }
+}
 
-        // 입력 받기
-        int n = scanner.nextInt();
-        int m = scanner.nextInt();
-        int[] toRemove = new int[m];
-        for (int i = 0; i < m; i++) {
-            toRemove[i] = scanner.nextInt();
+public class Main {
+    static StringBuilder sb = new StringBuilder();
+
+    static TreeSet<Integer> sNum = new TreeSet<>();
+    static TreeSet<Tuple> set = new TreeSet<>();
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        sNum.add(-1);
+        sNum.add(n+1);
+
+        st = new StringTokenizer(br.readLine());
+
+        for(int i=0; i<m; i++){
+            int y = Integer.parseInt(st.nextToken());
+            
+            sNum.add(y);
+
+            int x = sNum.lower(y);
+            int z = sNum.higher(y);
+
+            set.remove(new Tuple(z-x-1, x, z));
+            set.add(new Tuple(y-x-1, x, y));
+            set.add(new Tuple(z-y-1, y, z));
+
+            sb.append(set.first().len+"\n");
         }
-
-        // 초기 숫자 집합 생성
-        TreeSet<Integer> numbers = new TreeSet<>();
-        for (int i = 0; i <= n; i++) {
-            numbers.add(i);
-        }
-
-        // 구간들을 저장할 TreeSet
-        TreeSet<Interval> intervals = new TreeSet<>();
-        intervals.add(new Interval(0, n));
-
-        // 각 숫자를 제거하면서 최장 연속 수열 길이 계산
-        for (int i = 0; i < m; i++) {
-            int removeNum = toRemove[i];
-            numbers.remove(removeNum);
-
-            // 제거된 숫자가 포함된 구간 찾기
-            Interval toRemoveInterval = null;
-            for (Interval interval : intervals) {
-                if (interval.start <= removeNum && removeNum <= interval.end) {
-                    toRemoveInterval = interval;
-                    break;
-                }
-            }
-
-            // 구간 분리 및 재삽입
-            if (toRemoveInterval != null) {
-                intervals.remove(toRemoveInterval);
-
-                if (toRemoveInterval.start < removeNum) {
-                    intervals.add(new Interval(toRemoveInterval.start, removeNum - 1));
-                }
-                if (removeNum < toRemoveInterval.end) {
-                    intervals.add(new Interval(removeNum + 1, toRemoveInterval.end));
-                }
-            }
-
-            // 최장 연속 수열 길이 계산
-            int maxLength = intervals.isEmpty() ? 0 : intervals.first().length;
-            System.out.println(maxLength);
-        }
-
-        scanner.close();
+        
+        System.out.println(sb);
     }
 }
