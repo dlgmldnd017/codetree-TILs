@@ -56,7 +56,7 @@ public class Main {
                 Node n = pq2.poll();
 
                 ans = Math.max(ans, curTime-n.a);
-                if(curTime - n.a > 0) curTime = n.a + n.t;
+                if(curTime - n.a < 0) curTime = n.a + n.t;
                 else curTime += n.t;
             }
 
