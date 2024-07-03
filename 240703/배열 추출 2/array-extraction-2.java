@@ -31,8 +31,16 @@ public class Main {
                     }
 
                     else{
-                        sb.append(-m+"\n");
-                        plus.add(p);
+
+                        if(m>p){
+                            sb.append(p+"\n");
+                            minus.add(m);    
+                        }
+
+                        else{
+                            sb.append(-m+"\n");
+                            plus.add(p);
+                        }
                     }
                 }
             }
