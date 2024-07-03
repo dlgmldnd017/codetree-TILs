@@ -49,6 +49,7 @@ public class Main {
 
             if(!pq1.isEmpty() && pq2.size()==0){
                 pq2.add(pq1.poll());
+                curTime = pq2.peek().a;
             }
 
             if(pq2.size()==1){
