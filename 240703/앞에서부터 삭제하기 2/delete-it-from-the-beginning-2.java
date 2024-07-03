@@ -1,46 +1,43 @@
-import java.util.*;
-import java.io.*;
+import java.util.Scanner;
 
 public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-
-        int N = Integer.parseInt(br.readLine())+1;
-
-        st = new StringTokenizer(br.readLine());
-
-        int arr[] = new int[N];
-
-        // 누적합 
-        int prefix[] = new int[N];
-        
-        for(int i=1; i<N; i++){
-            int x = Integer.parseInt(st.nextToken());
-
-            arr[i] = x;
-            prefix[i] = prefix[i-1] + x;
+        int n = sc.nextInt();
+        int[] arr = new int[n + 1];
+        arr[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            arr[i] = sc.nextInt();
         }
 
-        // 최솟값
-        int postfix[] = new int[N];
-        int tmp = Integer.MAX_VALUE;
-
-        for(int i=N-1; i>0; i--){
-            tmp = Math.min(tmp, arr[i]);
-            postfix[i] = tmp;
+        // 왼쪽에서부터 누적합을 계산 => O(N)
+        int[] prefix = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            prefix[i] = prefix[i - 1] + arr[i];
         }
 
-        int total = prefix[N-1];
-        double ans = 0.0;
-
-        for(int K=1; K<N-2; K++){
-            int sum = total - prefix[K] - postfix[K+1];
-
-            ans = Math.max(ans, sum/(N-K-2));
+        // 오른쪽에서부터 최소값을 기록 => O(N)
+        int temp = 10001;
+        int[] postfix = new int[n + 1];
+        for (int i = n; i >= 0; i--) {
+            postfix[i] = Math.min(temp, arr[i]);
+            temp = postfix[i];
         }
 
-        System.out.printf("%.2f", ans);
+        int total = 0;
+        for (int i = 1; i <= n; i++) {
+            total += arr[i];
+        }
+
+        double ans = 0;
+        // 왼쪽부터 k개 원소를 삭제 => O(N)
+        for (int k = 1; k < n - 1; k++) {
+            int summation = total - prefix[k] - postfix[k + 1];
+            double avg = (double) summation / (n - k - 1);
+            ans = Math.max(ans, avg);
+        }
+
+        System.out.printf("%.2f%n", ans);
     }
 }
