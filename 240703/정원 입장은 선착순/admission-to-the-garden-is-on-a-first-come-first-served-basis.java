@@ -1,87 +1,86 @@
 import java.util.*;
-import java.io.*;
 
-class Node implements Comparable<Node>{
-    int num, a, t;
+class Node implements Comparable<Node> {
+    int index, arrivalTime, stayTime;
 
-    public Node(int num, int a, int t){
-        this.num = num;
-        this.a = a;
-        this.t = t;
+    public Node(int index, int arrivalTime, int stayTime) {
+        this.index = index;
+        this.arrivalTime = arrivalTime;
+        this.stayTime = stayTime;
     }
 
     @Override
-    public int compareTo(Node n){
-        if(this.a != n.a) return this.a - n.a;
-        return this.num - n.num;
+    public int compareTo(Node n) {
+        if (this.arrivalTime != n.arrivalTime) {
+            return this.arrivalTime - n.arrivalTime;
+        }
+        return this.index - n.index;
     }
 }
 
 public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+        PriorityQueue<Node> pQue = new PriorityQueue<>(); // 도착시간 기준 우선순위 큐
+        PriorityQueue<Node> temppQue = new PriorityQueue<>(Comparator.comparingInt(n -> n.index)); // 번호 순 우선순위 큐
+        int[] timearr = new int[N];
+        int maxtime = 0;
 
-        int N = Integer.parseInt(br.readLine());
-        
-        PriorityQueue<Node> pq1 = new PriorityQueue<>();
-        PriorityQueue<Node> pq2 = new PriorityQueue<>();
-
-        for(int i=1; i<=N; i++){
-            st = new StringTokenizer(br.readLine());
-
-            int a = Integer.parseInt(st.nextToken());
-            int t = Integer.parseInt(st.nextToken());
-
-            pq1.add(new Node(i, a, t));
+        for (int i = 0; i < N; i++) {
+            int a = sc.nextInt();
+            int t = sc.nextInt();
+            timearr[i] = t;
+            pQue.add(new Node(i, a, t));
         }
 
-        int ans = Integer.MIN_VALUE;
-        int curTime = pq1.peek().a;
+        int maxWaitTime = 0;
 
-        while(!pq1.isEmpty()){
+        while (!pQue.isEmpty()) {
+            // 정원에 입장하기 위해서 기다려야 할 사람들
+            while (!pQue.isEmpty()) {
+                int arrivalTime = pQue.peek().arrivalTime;
+                if (arrivalTime > maxtime) break;
 
-            // 먼저, curTime 아래에 도착한 사람들을 뽑는다.
-            while(!pq1.isEmpty() && pq1.peek().a <= curTime){
-                pq2.add(pq1.poll());
+                // 번호, 도착시간
+                Node node = pQue.poll();
+                temppQue.add(node);
             }
 
-            if(!pq1.isEmpty() && pq2.size()==0){
-                pq2.add(pq1.poll());
-                curTime = pq2.peek().a;
+            int a, t;
+
+            // 기다려야할 사람이 있다면
+            if (!temppQue.isEmpty()) {
+                Node node = temppQue.poll();
+                a = node.arrivalTime;
+                t = node.stayTime;
+            }
+            // 없다면
+            else {
+                Node node = pQue.poll();
+                a = node.arrivalTime;
+                t = node.stayTime;
             }
 
-            if(pq2.size()==1){
-                Node n = pq2.poll();
-
-                ans = Math.max(ans, curTime-n.a);
-                if(curTime - n.a < 0) curTime = n.a + n.t;
-                else curTime += n.t;
-            }
-
-            else{
-                while(pq2.size() > 1){
-                    Node n1 = pq2.poll();
-                    Node n2 = pq2.poll();
-
-                    if(n1.num > n2.num){
-                        pq1.add(n1);
-                        pq2.add(n2);
-                    }
-
-                    else{
-                        pq1.add(n2);
-                        pq2.add(n1);
-                    }
+            // 최초 입장인 경우
+            if (maxtime == 0) {
+                maxtime = a + t;
+            } else {
+                // 입장하기 위해 기다린 경우
+                if (maxtime > a) {
+                    maxWaitTime = Math.max(maxWaitTime, maxtime - a);
+                    maxtime += t;
                 }
-
-                Node cur = pq2.poll();
-                ans = Math.max(ans, curTime-cur.a);
-                curTime += cur.t;
+                // 안기다린 경우
+                else {
+                    maxtime = a + t;
+                }
             }
         }
 
-        System.out.println(ans);
+        System.out.println(maxWaitTime);
+
+        sc.close();
     }
 }
