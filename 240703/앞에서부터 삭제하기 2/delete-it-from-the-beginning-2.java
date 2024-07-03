@@ -25,10 +25,7 @@ public class Main {
             temp = postfix[i];
         }
 
-        int total = 0;
-        for (int i = 1; i <= n; i++) {
-            total += arr[i];
-        }
+        int total = prefix[n];
 
         double ans = 0;
         // 왼쪽부터 k개 원소를 삭제 => O(N)
