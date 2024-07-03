@@ -38,7 +38,7 @@ public class Main {
         for(int K=1; K<N-2; K++){
             int sum = total - prefix[K] - postfix[K+1];
 
-            ans = Math.max(ans, (dobule)sum/(N-K-2));
+            ans = Math.max(ans, (double)sum/(N-K-2));
         }
 
         System.out.printf("%.2f", ans);
