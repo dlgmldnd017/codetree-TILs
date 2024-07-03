@@ -1,6 +1,22 @@
 import java.util.*;
 import java.io.*;
 
+class Node implements Comparable<Node>{
+    int num, abs;
+
+    public Node(int num, int abs){
+        this.num = num;
+        this.abs = abs;
+    }
+
+    @Override
+    public int compareTo(Node n){
+        if(this.abs == n.abs) return this.num - n.num;
+
+        return this.abs - n.abs;
+    }
+}
+
 public class Main {
     static StringBuilder sb = new StringBuilder();
 
@@ -10,52 +26,21 @@ public class Main {
 
         int n = Integer.parseInt(br.readLine());
 
-        PriorityQueue<Long> minus = new PriorityQueue<>();
-        PriorityQueue<Long> plus = new PriorityQueue<>();
-
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        
         for(int i=0; i<n; i++){
-            long x = Long.parseLong(br.readLine());
+            int x = Integer.parseInt(br.readLine());
 
             if(x==0){
-                if(minus.isEmpty() && plus.isEmpty()) sb.append("0\n");
-                else {
-                    long m = minus.isEmpty() ? 0 : minus.poll();
-                    long p = plus.isEmpty() ? 0 : plus.poll();
-
-                    if(m==0){
-                        sb.append(p + "\n");
-                    }
-
-                    else if(p==0){
-                        sb.append(-m + "\n");
-                    }
-
-                    else{
-
-                        if(m>p){
-                            sb.append(p+"\n");
-                            minus.add(m);    
-                        }
-
-                        else{
-                            sb.append(-m+"\n");
-                            plus.add(p);
-                        }
-                    }
-                }
+                if(pq.isEmpty()) sb.append("0\n");
+                else sb.append(pq.poll().num+"\n");
             }
 
             else{
-                if(x>=0){
-                    plus.add(x);
-                }
-
-                else{
-                    minus.add(-x);
-                }
+                pq.add(new Node(x, Math.abs(x)));
             }
         }
-        
+
         System.out.println(sb);
     }
 }
