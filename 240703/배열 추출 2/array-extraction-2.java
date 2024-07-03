@@ -27,7 +27,7 @@ public class Main {
                     }
 
                     else if(p==0){
-                        sb.append(m + "\n");
+                        sb.append(-m + "\n");
                     }
 
                     else{
