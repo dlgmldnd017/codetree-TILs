@@ -18,7 +18,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        int N = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine())+1;
 
         int Q = Integer.parseInt(br.readLine());
 
@@ -36,14 +36,14 @@ public class Main {
 
                     if(n[i] != null) doSingleton(n[i]);
                     break;
-                
+
                 case 2:
                     i = Integer.parseInt(st.nextToken());
                     j = Integer.parseInt(st.nextToken());
-                    
-                    n[i] = new Node(i);
-                    n[j] = new Node(j);
-                    
+
+                    if(n[i]==null) n[i] = new Node(i);
+                    if(n[j]==null) n[j] = new Node(j);
+
                     insertPrev(n[i], n[j]);
                     break;
 
@@ -51,8 +51,8 @@ public class Main {
                     i = Integer.parseInt(st.nextToken());
                     j = Integer.parseInt(st.nextToken());
 
-                    n[i] = new Node(i);
-                    n[j] = new Node(j);
+                    if(n[i]==null) n[i] = new Node(i);
+                    if(n[j]==null) n[j] = new Node(j);
 
                     insertNext(n[i], n[j]);
                     break;
@@ -65,22 +65,22 @@ public class Main {
                     }
 
                     else{
-                        if(n[i].prev != null) sb.append(n[i].prev);
+                        if(n[i].prev != null) sb.append(n[i].prev.data+" ");
                         else sb.append("0 ");
 
-                        if(n[i].next != null) sb.append(n[i].next);
+                        if(n[i].next != null) sb.append(n[i].next.data+"\n");
                         else sb.append("0\n");
                     }
-                    
-                    break;    
+
+                    break;
             }
         }
 
-        for(int i=0; i<N; i++){
-            if(n[i] != null && n[i].next != null) sb.append(n[i].next + " ");
-            else sb.append("0 ");
+        for(int i=1; i<N; i++){
+            if(n[i] == null || n[i].next == null) sb.append(0 + " ");
+            else sb.append(n[i].next.data + " ");
         }
-        
+
         System.out.println(sb);
     }
 
@@ -90,7 +90,7 @@ public class Main {
             n.prev.next = n.next;
             n.next.prev = n.prev;
         }
-        
+
         // (2) 왼쪽에만 노드가 존재할 경우
         else if(n.prev != null){
             n.prev.next = null;
