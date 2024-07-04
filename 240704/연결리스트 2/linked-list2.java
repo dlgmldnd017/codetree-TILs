@@ -41,12 +41,18 @@ public class Main {
                     i = Integer.parseInt(st.nextToken());
                     j = Integer.parseInt(st.nextToken());
                     
+                    n[i] = new Node(i);
+                    n[j] = new Node(j);
+                    
                     insertPrev(n[i], n[j]);
                     break;
 
                 case 3:
                     i = Integer.parseInt(st.nextToken());
                     j = Integer.parseInt(st.nextToken());
+
+                    n[i] = new Node(i);
+                    n[j] = new Node(j);
 
                     insertNext(n[i], n[j]);
                     break;
