@@ -143,23 +143,23 @@ public class Main {
                 case 1:
                     if(bs[i].head != null){
                         Node n = bs[i].removeFirst();
-                        bs[j].addLast(n);
+                        bs[i].addLast(n);
                     }
                     break;
 
                 case 2:
                     if(bs[i].head != null){
                         Node n = bs[i].removeLast();
-                        bs[j].addFirst(n);
+                        bs[i].addFirst(n);
                     }
                     break;
 
                 case 3:
-                    if(i!=j || bs[i].head != null) bs[i].moveToFront(bs[j]);
+                    if(i!=j && bs[i].head != null) bs[i].moveToFront(bs[j]);
                     break;
 
                 case 4:
-                    if(i!=j || bs[i].head != null) bs[i].moveToBack(bs[j]);
+                    if(i!=j && bs[i].head != null) bs[i].moveToBack(bs[j]);
                     break;
             }
         }
