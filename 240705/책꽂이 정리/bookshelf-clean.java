@@ -155,11 +155,11 @@ public class Main {
                     break;
 
                 case 3:
-                    if(i!=j) bs[i].moveToFront(bs[j]);
+                    if(i!=j || bs[i].head != null) bs[i].moveToFront(bs[j]);
                     break;
 
                 case 4:
-                    if(i!=j) bs[i].moveToBack(bs[j]);
+                    if(i!=j || bs[i].head != null) bs[i].moveToBack(bs[j]);
                     break;
             }
         }
