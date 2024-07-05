@@ -77,10 +77,16 @@ public class Main {
                     break;
 
                 case 3:
-                    cities.head.next = cities.head.next.next;
-                    cities.head.next.next.prev = cities.head;
-                    cities.head.next.prev = null;
-                    cities.head.next.next = null;
+                    if(cities.head.next.next == cities.tail){
+                        cities.head.next.next.prev = cities.head;
+                        cities.head.next = cities.tail;
+                    }
+
+                    else{
+                        cities.head.next = cities.head.next.next;
+                        cities.head.next.next.prev = cities.head;
+                    }
+
                     break;
 
                 case 4:
@@ -95,7 +101,7 @@ public class Main {
             }
 
             if((cities.head.next.data.equals(cities.tail.data)) || (cities.tail == null) || (cities.head.next == null)) sb.append("-1\n");
-            sb.append(cities.tail.data + " " + cities.head.next.data + "\n");
+            else sb.append(cities.tail.data + " " + cities.head.next.data + "\n");
         }
 
         System.out.println(sb);
