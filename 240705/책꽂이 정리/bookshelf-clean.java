@@ -143,23 +143,23 @@ public class Main {
                 case 1:
                     if(bs[i].head != null){
                         Node n = bs[i].removeFirst();
-                        bs[i].addLast(n);
+                        bs[j].addLast(n);
                     }
                     break;
 
                 case 2:
                     if(bs[i].head != null){
                         Node n = bs[i].removeLast();
-                        bs[i].addFirst(n);
+                        bs[j].addFirst(n);
                     }
                     break;
 
                 case 3:
-                    bs[i].moveToFront(bs[j]);
+                    if(i!=j) bs[i].moveToFront(bs[j]);
                     break;
 
                 case 4:
-                    bs[i].moveToBack(bs[j]);
+                    if(i!=j) bs[i].moveToBack(bs[j]);
                     break;
             }
         }
@@ -174,7 +174,7 @@ public class Main {
                 count++;
                 current = current.next;
             }
-        
+
             sb.append(count + tmp.toString() + "\n");
         }
 
