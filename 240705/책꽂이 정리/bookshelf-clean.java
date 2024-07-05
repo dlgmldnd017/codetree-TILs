@@ -1,82 +1,183 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
+
+class Node{
+    int data;
+    Node prev, next;
+
+    public Node(int data){
+        this.data =data;
+        prev = next = null;
+    }
+}
+
+class BookShelf{
+    Node head, tail;
+
+    public BookShelf(){
+        head = tail = null;
+    }
+
+    // (1) 맨 앞 삭제 후 맨 앞 노드 반환
+    public Node removeFirst(){
+        Node n = head;
+
+        if(head == tail){
+            head = tail = null;
+        }
+        else{
+            head = head.next;
+            head.prev = null;
+        }
+
+        n.next = null;
+        return n;
+    }
+
+    // (2) 맨 뒤 삭제 후 맨 뒤 노드 반환
+    public Node removeLast(){
+        Node n = tail;
+
+        if(head == tail){
+            head = tail = null;
+        }
+
+        else{
+            tail = tail.prev;
+            tail.next = null;
+        }
+
+        n.prev = null;
+        return n;
+    }
+
+    // (3) 맨 앞 추가
+    public void addFirst(Node n){
+        if(head == null){
+            head = tail = n;
+        }
+
+        else{
+            n.next = head;
+            head.prev = n;
+            head = n;
+        }
+    }
+
+    // (4) 맨 뒤 추가
+    public void addLast(Node n){
+        if(tail == null){
+            head = tail = n;
+        }
+
+        else{
+            tail.next = n;
+            n.prev = tail;
+            tail = n;
+        }
+    }
+
+    // (5) i번 책꽂이 -> j번 책꽂이 앞에 추가
+    public void moveToFront(BookShelf target){
+        if(target.head == null){
+            target.head = this.head;
+            target.tail = this.tail;
+        }
+
+        else{
+            this.tail.next = target.head;
+            target.head.prev = this.tail;
+            target.head = this.head;
+        }
+
+        this.head = this.tail = null;
+    }
+
+    // (6) i번 책꽂이 -> j번 책꽂이 뒤에 추가
+    public void moveToBack(BookShelf target){
+        if(target.head == null){
+            target.head = this.head;
+            target.tail = this.tail;
+        }
+
+        else{
+            target.tail.next = this.head;
+            this.head.prev = target.tail;
+            target.tail = this.tail;
+        }
+
+        this.head = this.tail = null;
+    }
+}
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        // 입력을 빠르게 받기 위한 BufferedReader
+    static StringBuilder sb = new StringBuilder();
+
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer st;
 
-        // 책의 개수 N과 책꽂이의 개수 K를 입력 받음
-        int N = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken())+1;
+        int K = Integer.parseInt(st.nextToken())+1;
 
-        // 각 책꽂이를 저장할 리스트 배열 생성
-        List<Deque<Integer>> bookshelves = new ArrayList<>();
-        for (int i = 0; i < K; i++) {
-            bookshelves.add(new LinkedList<>());
-        }
-
-        // 처음에 모든 책이 1번 책꽂이에 순서대로 꽂혀 있음
-        for (int i = 1; i <= N; i++) {
-            bookshelves.get(0).add(i);
-        }
-
-        // 연산 횟수 Q를 입력 받음
         int Q = Integer.parseInt(br.readLine());
 
-        // 각 연산을 처리
-        for (int q = 0; q < Q; q++) {
+        BookShelf bs[] = new BookShelf[K];
+        for(int i=1; i<K; i++){
+            bs[i] = new BookShelf();
+        }
+
+        // 1번 책꽂이에 1~N 책들이 꽂히게 함
+        for(int i=1; i<N; i++){
+            bs[1].addLast(new Node(i));
+        }
+
+        for(int q=0; q<Q; q++){
             st = new StringTokenizer(br.readLine());
-            int operation = Integer.parseInt(st.nextToken());
-            int i = Integer.parseInt(st.nextToken()) - 1;
-            int j = Integer.parseInt(st.nextToken()) - 1;
+            int command = Integer.parseInt(st.nextToken());
+            int i = Integer.parseInt(st.nextToken());
+            int j = Integer.parseInt(st.nextToken());
 
-            switch (operation) {
+            switch(command){
                 case 1:
-                    // i번 책꽂이의 맨 앞 책을 j번 책꽂이의 맨 뒤에 꽂음
-                    if (!bookshelves.get(i).isEmpty()) {
-                        bookshelves.get(j).addLast(bookshelves.get(i).removeFirst());
+                    if(bs[i].head != null){
+                        Node n = bs[i].removeFirst();
+                        bs[i].addLast(n);
                     }
                     break;
+
                 case 2:
-                    // i번 책꽂이의 맨 뒷 책을 j번 책꽂이의 맨 앞에 꽂음
-                    if (!bookshelves.get(i).isEmpty()) {
-                        bookshelves.get(j).addFirst(bookshelves.get(i).removeLast());
+                    if(bs[i].head != null){
+                        Node n = bs[i].removeLast();
+                        bs[i].addFirst(n);
                     }
                     break;
+
                 case 3:
-                    // i번 책꽂이의 책을 모두 j번 책꽂이의 맨 앞으로 옮김
-                    if (!bookshelves.get(i).isEmpty()) {
-                        Deque<Integer> temp = new LinkedList<>();
-                        while (!bookshelves.get(i).isEmpty()) {
-                            temp.addFirst(bookshelves.get(i).removeLast());
-                        }
-                        while (!temp.isEmpty()) {
-                            bookshelves.get(j).addFirst(temp.removeFirst());
-                        }
-                    }
+                    bs[i].moveToFront(bs[j]);
                     break;
+
                 case 4:
-                    // i번 책꽂이의 책을 모두 j번 책꽂이의 맨 뒤로 옮김
-                    if (!bookshelves.get(i).isEmpty()) {
-                        while (!bookshelves.get(i).isEmpty()) {
-                            bookshelves.get(j).addLast(bookshelves.get(i).removeFirst());
-                        }
-                    }
+                    bs[i].moveToBack(bs[j]);
                     break;
             }
         }
 
-        // 최종 상태 출력
-        StringBuilder sb = new StringBuilder();
-        for (int k = 0; k < K; k++) {
-            sb.append(bookshelves.get(k).size());
-            for (int book : bookshelves.get(k)) {
-                sb.append(" ").append(book);
+        for(int i=1; i<K; i++){
+            Node current = bs[i].head;
+            int count = 0;
+            StringBuilder tmp = new StringBuilder();
+
+            while (current != null) {
+                tmp.append(" ").append(current.data);
+                count++;
+                current = current.next;
             }
-            sb.append("\n");
+        
+            sb.append(count + tmp.toString() + "\n");
         }
-        System.out.print(sb.toString());
+
+        System.out.println(sb);
     }
 }
