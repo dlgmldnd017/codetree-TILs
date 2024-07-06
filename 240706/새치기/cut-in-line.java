@@ -1,25 +1,28 @@
 import java.util.*;
 import java.io.*;
 
-class Node{
-    int num, line;
+class Node {
+    int num;
     Node prev, next;
 
-    public Node(int num, int line){
+    public Node(int num) {
         this.num = num;
-        this.line = line;
     }
 }
 
-class Line{
+class Line {
     Node head, tail;
+
+    public Line() {
+        head = null;
+        tail = null;
+    }
 }
 
 public class Main {
     static StringBuilder sb = new StringBuilder();
-
     static Map<Integer, Node> map = new HashMap<>();
-    static Line l[];
+    static Line[] lines;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,220 +30,188 @@ public class Main {
 
         st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken())+1;
+        int M = Integer.parseInt(st.nextToken());
         int Q = Integer.parseInt(st.nextToken());
 
-        l = new Line[M];
+        lines = new Line[M];
 
-        for(int i=1; i<M; i++){
-            l[i] = new Line();
-            
+        for (int i = 0; i < M; i++) {
+            lines[i] = new Line();
             st = new StringTokenizer(br.readLine());
             int n = Integer.parseInt(st.nextToken());
-            
-            int x = Integer.parseInt(st.nextToken());
-            map.put(x, new Node(x, i));
 
-            l[i].head = map.get(x);
+            if (n > 0) {
+                int first = Integer.parseInt(st.nextToken());
+                Node headNode = new Node(first);
+                map.put(first, headNode);
+                lines[i].head = headNode;
+                Node current = headNode;
 
-            for(int j=1; j<n; j++){
-                int y = Integer.parseInt(st.nextToken());
+                for (int j = 1; j < n; j++) {
+                    int num = Integer.parseInt(st.nextToken());
+                    Node newNode = new Node(num);
+                    map.put(num, newNode);
+                    current.next = newNode;
+                    newNode.prev = current;
+                    current = newNode;
+                }
 
-                map.put(y, new Node(y, i));
-                map.get(x).next = map.get(y);
-                map.get(y).prev = map.get(x);
-                x = y;
+                lines[i].tail = current;
             }
-
-            l[i].tail = map.get(x);
         }
 
-        for(int q=0; q<Q; q++){
+        for (int q = 0; q < Q; q++) {
             st = new StringTokenizer(br.readLine());
             int command = Integer.parseInt(st.nextToken());
 
-            int a, b, c;
-            int lineA, lineB;
-
-            switch(command){
-                case 1:
-                    a = Integer.parseInt(st.nextToken());
-                    b = Integer.parseInt(st.nextToken());  
-
-                    lineA = map.get(a).line;
-                    lineB = map.get(b).line;
-                    
-                    // (1) 같은 라인일 경우
-                    if(lineA == lineB){
-                        if(map.get(a) == l[lineA].tail){
-                            map.get(a).prev.next = null;
-                            l[lineA].tail = map.get(a).prev;
-                            map.get(a).prev = null;
-                            
-                            if(map.get(b) == l[lineA].head){
-                                map.get(a).next = map.get(b);
-                                map.get(b).prev = map.get(a);
-                                l[lineA].head = map.get(a);
-                            }
-                        }
-                        else{
-                            map.get(a).prev.next = map.get(a).next;
-                            map.get(a).next.prev = map.get(a).prev;
-                        }
-
-                        map.get(a).next = map.get(b);
-                        map.get(a).prev = map.get(b).prev;
-                        map.get(b).prev.next = map.get(a);
-                        map.get(b).prev = map.get(a);
-                    }
-
-                    // (2) 다른 라인이면서, a 번이 해당 라인의 head일 경우
-                    else if(l[lineA].head == map.get(a)){
-                        if(map.get(a).next == l[lineA].tail){
-                            l[lineA].head = l[lineA].tail = map.get(a).next;
-                            map.get(a).next.prev = null;
-                        }
-                        else if(map.get(a).next != null){
-                            l[lineA].head = map.get(a).next;
-                            map.get(a).next.prev = null;
-                        }
-                        else{
-                            l[lineA].head = l[lineA].tail = null;
-                        }
-
-                        addFirst(a, b);
-                    }
-
-                    // (3) 다른 라인이면서, a번이 해당 라인의 tail일 경우
-                    else if(l[lineA].tail == map.get(a)){
-                        if(map.get(a).prev == l[lineA].head){
-                            l[lineA].head = l[lineA].tail = map.get(a).prev;
-                            map.get(a).prev.next = null;
-                        }
-                        else if(map.get(a).prev != null){
-                            l[lineA].tail = map.get(a).prev;
-                            map.get(a).prev.next = null;
-                        }
-                        else{
-                            l[lineA].head = l[lineA].tail = null;
-                        }
-                        
-                        addFirst(a, b);
-                    }
-                    break;
-
-                case 2:
-                    a = Integer.parseInt(st.nextToken());
-                    lineA = map.get(a).line;
-
-                    if(l[lineA].head == map.get(a)){
-                        if(l[lineA].tail == map.get(a)){
-                            l[lineA].head = l[lineA].tail = null;
-                        }
-                        else{
-                            l[lineA].head = map.get(a).next;
-                            l[lineA].head.prev = null;
-                        }
-                    }
-                    else if(l[lineA].tail == map.get(a)){
-                        l[lineA].tail = map.get(a).prev;
-                        l[lineA].tail.next = null;
-                    }
-                    else{
-                        map.get(a).prev.next = map.get(a).next;
-                        map.get(a).next.prev = map.get(a).prev;
-                    }
-
-                    map.remove(a);
-                    break;
-
-                case 3:
-                    a = Integer.parseInt(st.nextToken());
-                    b = Integer.parseInt(st.nextToken());
-                    c = Integer.parseInt(st.nextToken());
-
-                    lineA = map.get(a).line;
-
-                    if(l[lineA].head == map.get(a)){
-                        if(l[lineA].tail == map.get(b)){
-                            l[lineA].head = l[lineA].tail = null;
-                        }
-                        else{
-                            l[lineA].head = map.get(b).next;
-                            map.get(b).next.prev = null;
-                        }
-                    }
-                    else{
-                        if(l[lineA].tail == map.get(b)){
-                            l[lineA].tail = map.get(a).prev;
-                            map.get(a).prev.next = null; 
-                        }
-                        else{
-                            map.get(a).prev.next = map.get(b).next;
-                            map.get(b).next.prev = map.get(a).prev;
-                        }
-                    }
-
-                    addFirstC(a, b, c);
-                    break;
+            if (command == 1) {
+                int a = Integer.parseInt(st.nextToken());
+                int b = Integer.parseInt(st.nextToken());
+                handleCommand1(a, b);
+            } else if (command == 2) {
+                int a = Integer.parseInt(st.nextToken());
+                handleCommand2(a);
+            } else if (command == 3) {
+                int a = Integer.parseInt(st.nextToken());
+                int b = Integer.parseInt(st.nextToken());
+                int c = Integer.parseInt(st.nextToken());
+                handleCommand3(a, b, c);
             }
         }
 
-        for(int i=1; i<M; i++){
-            if(l[i].head == null) sb.append("-1\n");
-            else{
-                if(l[i].head == l[i].tail) sb.append(l[i].head.num + "\n");
-                else{
-                    Node n = l[i].head;
-
-                    while(n != null){
-                        sb.append(n.num + " ");
-                        n = n.next;
-                    }
-                    sb.append("\n");
+        for (Line line : lines) {
+            if (line.head == null) {
+                sb.append("-1\n");
+            } else {
+                Node current = line.head;
+                while (current != null) {
+                    sb.append(current.num).append(" ");
+                    current = current.next;
                 }
+                sb.append("\n");
             }
         }
-        
+
         System.out.println(sb);
     }
 
-    static void addFirst(int a, int b){
-        map.get(a).prev = map.get(a).next = null;
+    static void handleCommand1(int a, int b) {
+        Node nodeA = map.get(a);
+        Node nodeB = map.get(b);
 
-        int lineA = map.get(a).line;
-        int lineB = map.get(b).line;
-        
-        if(l[lineB].head == map.get(b)){
-            map.get(b).prev = map.get(a);
-            map.get(a).next = map.get(b);
-            l[lineB].head = map.get(a);
+        if (nodeA == nodeB.prev) return; // If already in position
+
+        // Remove nodeA from its current position
+        if (nodeA.prev != null) {
+            nodeA.prev.next = nodeA.next;
+        } else {
+            for (Line line : lines) {
+                if (line.head == nodeA) {
+                    line.head = nodeA.next;
+                    break;
+                }
+            }
         }
-        else{
-            map.get(a).next = map.get(b);
-            map.get(b).prev.next = map.get(a);
-            map.get(a).prev = map.get(b).prev;
-            map.get(b).prev = map.get(a);
+
+        if (nodeA.next != null) {
+            nodeA.next.prev = nodeA.prev;
+        } else {
+            for (Line line : lines) {
+                if (line.tail == nodeA) {
+                    line.tail = nodeA.prev;
+                    break;
+                }
+            }
         }
+
+        // Insert nodeA before nodeB
+        nodeA.next = nodeB;
+        nodeA.prev = nodeB.prev;
+
+        if (nodeB.prev != null) {
+            nodeB.prev.next = nodeA;
+        } else {
+            for (Line line : lines) {
+                if (line.head == nodeB) {
+                    line.head = nodeA;
+                    break;
+                }
+            }
+        }
+        nodeB.prev = nodeA;
     }
 
-    static void addFirstC(int a, int b, int c){
-        int lineC = map.get(c).line;
+    static void handleCommand2(int a) {
+        Node nodeA = map.get(a);
 
-        if(l[lineC].head == map.get(c)){
-            
-            if(l[lineC].tail == map.get(c)){
-                l[lineC].tail = null;
+        // Remove nodeA from its current position
+        if (nodeA.prev != null) {
+            nodeA.prev.next = nodeA.next;
+        } else {
+            for (Line line : lines) {
+                if (line.head == nodeA) {
+                    line.head = nodeA.next;
+                    break;
+                }
             }
+        }
 
-            l[lineC].head = map.get(a);
-            map.get(c).prev = map.get(b);
+        if (nodeA.next != null) {
+            nodeA.next.prev = nodeA.prev;
+        } else {
+            for (Line line : lines) {
+                if (line.tail == nodeA) {
+                    line.tail = nodeA.prev;
+                    break;
+                }
+            }
         }
-        else{
-            map.get(a).prev = map.get(c).prev;
-            map.get(a).prev.next = map.get(a);
-            map.get(b).next = map.get(c);
-            map.get(c).prev = map.get(b);
+
+        map.remove(a);
+    }
+
+    static void handleCommand3(int a, int b, int c) {
+        Node start = map.get(a);
+        Node end = map.get(b);
+        Node target = map.get(c);
+
+        // Remove the segment from the current line
+        if (start.prev != null) {
+            start.prev.next = end.next;
+        } else {
+            for (Line line : lines) {
+                if (line.head == start) {
+                    line.head = end.next;
+                    break;
+                }
+            }
         }
+
+        if (end.next != null) {
+            end.next.prev = start.prev;
+        } else {
+            for (Line line : lines) {
+                if (line.tail == end) {
+                    line.tail = start.prev;
+                    break;
+                }
+            }
+        }
+
+        // Insert the segment before the target
+        if (target.prev != null) {
+            target.prev.next = start;
+        } else {
+            for (Line line : lines) {
+                if (line.head == target) {
+                    line.head = start;
+                    break;
+                }
+            }
+        }
+
+        start.prev = target.prev;
+        end.next = target;
+        target.prev = end;
     }
 }
