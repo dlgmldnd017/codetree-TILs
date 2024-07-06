@@ -36,8 +36,8 @@ public class Main {
             n[number[i]] = new Node(number[i]);
         }
 
-        g.head = n[1];
-        g.head.next = n[2];
+        g.head = n[number[1]];
+        g.head.next = n[number[2]];
 
         g.tail = n[number[N-1]];
         g.tail.prev = n[number[N-2]];
