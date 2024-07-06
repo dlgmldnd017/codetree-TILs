@@ -26,7 +26,7 @@ public class Main {
         int M = Integer.parseInt(st.nextToken());
 
         Gisa g = new Gisa();
-        Node n[] = new Node[100001];
+        Node n[] = new Node[1000001];
 
         int number[] = new int[N];
 
