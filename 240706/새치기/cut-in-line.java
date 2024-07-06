@@ -96,7 +96,11 @@ public class Main {
 
                     // (2) 다른 라인이면서, a 번이 해당 라인의 head일 경우
                     else if(l[lineA].head == map.get(a)){
-                        if(map.get(a).next != null){
+                        if(map.get(a).next == l[lineA].tail){
+                            l[lineA].head = l[lineA].tail = map.get(a).next;
+                            map.get(a).next.prev = null;
+                        }
+                        else if(map.get(a).next != null){
                             l[lineA].head = map.get(a).next;
                             map.get(a).next.prev = null;
                         }
@@ -104,20 +108,23 @@ public class Main {
                             l[lineA].head = l[lineA].tail = null;
                         }
 
-                        map.get(a).next = map.get(a).prev = null;
-
                         addFirst(a, b);
                     }
 
                     // (3) 다른 라인이면서, a번이 해당 라인의 tail일 경우
                     else if(l[lineA].tail == map.get(a)){
-                        if(map.get(a).prev != null){
+                        if(map.get(a).prev == l[lineA].head){
+                            l[lineA].head = l[lineA].tail = map.get(a).prev;
+                            map.get(a).prev.next = null;
+                        }
+                        else if(map.get(a).prev != null){
                             l[lineA].tail = map.get(a).prev;
                             map.get(a).prev.next = null;
                         }
                         else{
                             l[lineA].head = l[lineA].tail = null;
                         }
+                        
                         addFirst(a, b);
                     }
                     break;
@@ -199,6 +206,8 @@ public class Main {
     }
 
     static void addFirst(int a, int b){
+        map.get(a).prev = map.get(a).next = null;
+
         int lineA = map.get(a).line;
         int lineB = map.get(b).line;
         
