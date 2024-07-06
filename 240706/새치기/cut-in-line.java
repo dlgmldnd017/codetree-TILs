@@ -104,6 +104,8 @@ public class Main {
                             l[lineA].head = l[lineA].tail = null;
                         }
 
+                        map.get(a).next = map.get(a).prev = null;
+
                         addFirst(a, b);
                     }
 
@@ -217,6 +219,11 @@ public class Main {
         int lineC = map.get(c).line;
 
         if(l[lineC].head == map.get(c)){
+            
+            if(l[lineC].tail == map.get(c)){
+                l[lineC].tail = null;
+            }
+
             l[lineC].head = map.get(a);
             map.get(c).prev = map.get(b);
         }
