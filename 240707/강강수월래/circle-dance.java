@@ -97,11 +97,11 @@ public class Main {
         nodeA.next = nodeB;
         nodeB.prev = nodeA;
 
-        Line lineA = findLine(nodeA);
-        Line lineB = findLine(nodeB);
+        // Line lineA = findLine(nodeA);
+        // Line lineB = findLine(nodeB);
 
-        list.remove(lineA);
-        list.remove(lineB);
+        // list.remove(lineA);
+        // list.remove(lineB);
 
         Line l = new Line();
         l.head = nodeB;
@@ -115,8 +115,8 @@ public class Main {
         Node nodeB = map.get(B);
         Node prevB = map.get(B).prev;
 
-        Line l = findLine(nodeA);
-        list.remove(l);
+        // Line l = findLine(nodeA);
+        // list.remove(l);
 
         // 라인 B
         Line lineB = new Line();
