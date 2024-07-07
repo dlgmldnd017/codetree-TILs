@@ -2,24 +2,23 @@ import java.util.*;
 import java.io.*;
 
 class Node{
-    int num, line;
+    int num;
     Node prev, next;
 
-    public Node(int num, int line){
+    public Node(int num){
         this.num = num;
-        this.line = line;
     }
 }
 
-class Circle{
+class Line{
     Node head, tail;
 }
 
 public class Main {
     static StringBuilder sb = new StringBuilder();
 
-    static Circle c[];
     static Map<Integer, Node> map = new HashMap<>();
+    static List<Line> list = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -30,23 +29,20 @@ public class Main {
         int M = Integer.parseInt(st.nextToken())+1;
         int Q = Integer.parseInt(st.nextToken());
 
-        c = new Circle[M];
-        c[0] = new Circle();
-
         for(int i=1; i<M; i++){
-            c[i] = new Circle();
+            Line l = new Line();
 
             st = new StringTokenizer(br.readLine());
             int n = Integer.parseInt(st.nextToken());
             int x = Integer.parseInt(st.nextToken());
             int y;
 
-            map.put(x, new Node(x, i));
-            c[i].head = map.get(x);
+            map.put(x, new Node(x));
+            l.head = map.get(x);
 
             for(int j=1; j<n; j++){
                 y = Integer.parseInt(st.nextToken());
-                map.put(y, new Node(y, i));
+                map.put(y, new Node(y));
 
                 map.get(x).next = map.get(y);
                 map.get(y).prev = map.get(x);
@@ -54,10 +50,11 @@ public class Main {
                 x = y;
             }
 
-            c[i].tail = map.get(x);
+            l.tail = map.get(x);
+            l.head.prev = l.tail;
+            l.tail.next = l.head;
 
-            c[i].head.prev = c[i].tail;
-            c[i].tail.next = c[i].head;
+            list.add(l);
         }
 
         for(int q=0; q<Q; q++){
@@ -100,49 +97,78 @@ public class Main {
         nodeA.next = nodeB;
         nodeB.prev = nodeA;
 
-        c[nodeB.line].head = c[nodeB.line].tail = null;
+        Line lineA = findLine(nodeA);
+        Line lineB = findLine(nodeB);
+
+        list.remove(lineA);
+        list.remove(lineB);
+
+        Line l = new Line();
+        l.head = nodeB;
+        l.tail = nodeA;
+
+        list.add(l);
     }
 
     static void handleCommand2(int A, int B){
         Node nodeA = map.get(A);
         Node nodeB = map.get(B);
-
         Node prevB = map.get(B).prev;
 
+        Line l = findLine(nodeA);
+        list.remove(l);
+
+        // 라인 B
+        Line lineB = new Line();
         nodeA.prev.next = nodeB;
         nodeB.prev = nodeA.prev;
 
-        int idx=0;
-        for(Circle circle : c){
-            if(circle.head == null) break;
-            idx++;
-        }
+        lineB.head = nodeB;
+        lineB.tail = nodeB.prev;
+        list.add(lineB);
 
-        nodeA.prev = null;
-        prevB.next = null;
+        // 라인 A
+        Line lineA = new Line();
+        nodeA.prev = prevB;
+        prevB.next = nodeA;
 
-        c[idx].head = nodeA;
-        c[idx].tail = prevB;
-
+        lineA.head = nodeA;
+        lineA.tail = nodeA.prev;
+        list.add(lineA);
     }
 
     static void handleCommand3(int A){
         Node nodeA = map.get(A);
 
+        Line lineA = findLine(nodeA);
+        
         int min = Integer.MAX_VALUE;
 
-        Node head = c[nodeA.line].head;
-        while(head!=c[nodeA.line].tail){
-            min = Math.min(min, head.num);
-            head = head.next;
+        Node cur = lineA.head;
+            
+        do{
+            min = Math.min(min, cur.num);
+            cur = cur.next;
+        } while(cur != lineA.head);
+
+        cur = map.get(min);
+            
+        do{
+            sb.append(cur.num+" ");
+            cur = cur.prev;
+        } while(cur != map.get(min));
+    }
+
+    static Line findLine(Node node){
+        for(Line line : list){
+            Node cur = line.head;
+
+            do{
+                if(cur == node) return line;
+                cur = cur.next;
+            } while(cur != line.head);
         }
 
-        if(min>c[nodeA.line].tail.num) min = c[nodeA.line].tail.num;
-
-        Node n = map.get(min);
-        do{
-            sb.append(n.num + " ");
-            n = n.prev;
-        } while(n != map.get(min));
+        return null;
     }
 }
