@@ -14,20 +14,6 @@ class Line{
     Node head, tail;
 }
 
-class Order implements Comparable<Order>{
-    int idx;
-    String name;
-
-    public Order(int idx, String name){
-        this.idx = idx;
-        this.name = name;
-    }
-
-    public int compareTo(Order o){
-        return this.idx - o.idx;
-    }
-}
-
 public class Main {
     static StringBuilder sb = new StringBuilder();
 
@@ -52,28 +38,15 @@ public class Main {
         double X = N/(M-1);
         int x1 = (int) X;
 
-        PriorityQueue<Order> pq[] = new PriorityQueue[M];
-        for(int i=0; i<M; i++){
-            pq[i] = new PriorityQueue();
-        }
-
         st = new StringTokenizer(br.readLine());
-        for(int i=1; i<=N; i++){
-            String name = st.nextToken();
-
-            int l = (int) Math.ceil(i / X);
-            int o = ((i-1)%x1) + 1;
-            pq[l].add(new Order(o, name));
-        }
-
         for(int i=1; i<M; i++){
-            String cur = pq[i].poll().name;
+            String cur = st.nextToken();
 
             map.put(cur, new Node(cur));
             line[i].head = map.get(cur);
 
-            while(!pq[i].isEmpty()){
-                String next = pq[i].poll().name;
+            for(int j=2; j<=x1; j++){
+                String next = st.nextToken();
                 map.put(next, new Node(next));
 
                 map.get(cur).next = map.get(next);
@@ -81,7 +54,6 @@ public class Main {
 
                 cur = next;
             }
-
             line[i].tail = map.get(cur);
         }
 
@@ -242,6 +214,7 @@ public class Main {
             }
         }
 
+        A.prev = C.prev;
         B.next = C;
         C.prev = B;
     }
