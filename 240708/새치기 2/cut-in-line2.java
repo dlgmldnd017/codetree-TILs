@@ -102,35 +102,30 @@ public class Main {
         Node A = map.get(a);
         Node B = map.get(b);
 
-        if(A == B.prev) return;
-
-        // A 왼쪽 노드 확인
         if(A.prev != null){
             A.prev.next = A.next;
         }
         else{
             for(Line l : line){
-                if(l.head == A) {
+                if(l.head == A){
                     l.head = A.next;
                     break;
                 }
             }
         }
 
-        // A 오른쪽 노드 확인
         if(A.next != null){
             A.next.prev = A.prev;
         }
         else{
             for(Line l : line){
-                if(l.tail == A) {
+                if(l.tail == A){
                     l.tail = A.prev;
                     break;
                 }
             }
         }
 
-        A.next = B;
         A.prev = B.prev;
         
         if(B.prev != null){
@@ -138,14 +133,15 @@ public class Main {
         }
         else{
             for(Line l : line){
-                if(l.head == B) {
+                if(l.head == B){
                     l.head = A;
                     break;
                 }
             }
         }
 
-        B.prev = A;
+        map.get(a).next = map.get(b);
+        map.get(b).prev = map.get(a);
     }
 
     static void handleCommand2(String a){
