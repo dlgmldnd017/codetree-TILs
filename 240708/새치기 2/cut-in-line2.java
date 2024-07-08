@@ -61,9 +61,8 @@ public class Main {
         for(int i=1; i<=N; i++){
             String name = st.nextToken();
 
-            int l = (int) Math.round(i / X);
+            int l = (int) Math.ceil(i / X);
             int o = ((i-1)%x1) + 1;
-
             pq[l].add(new Order(o, name));
         }
 
