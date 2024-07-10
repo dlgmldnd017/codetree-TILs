@@ -4,8 +4,8 @@ import java.io.*;
 public class Main {
     static int N,K, arr[][], prefixSum[][];
     
-    static int dy[] = {-2, 0, 2, 0};
-    static int dx[] = {0, 2, 0, -2};
+    static int dy[];
+    static int dx[];
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,6 +32,9 @@ public class Main {
                 prefixSum[i][j] = prefixSum[i-1][j] + prefixSum[i][j-1] - prefixSum[i-1][j-1] + arr[i][j];
             }
         }
+
+        dy = new int[]{-K, 0, K, 0};
+        dx = new int[]{0, K, 0, -K};
 
         int ans = Integer.MIN_VALUE;
 
