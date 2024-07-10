@@ -1,82 +1,64 @@
 import java.util.*;
-import java.io.*;
 
 public class Main {
-    static int N,K, arr[][], prefixSum[][];
-    
-    static int dy[];
-    static int dx[];
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+        int N = sc.nextInt();
+        int K = sc.nextInt();
 
-        st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken())+1;
-        K = Integer.parseInt(st.nextToken());
-
-        arr = new int[N][N];
-
-        for(int i=1; i<N; i++){
-            st = new StringTokenizer(br.readLine());
-
-            for(int j=1; j<N; j++){
-                arr[i][j] = Integer.parseInt(st.nextToken());
+        int[][] grid = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                grid[i][j] = sc.nextInt();
             }
         }
 
-        prefixSum = new int[N][N];
-
-        for(int i=1; i<N; i++){
-            for(int j=1; j<N; j++){
-                prefixSum[i][j] = prefixSum[i-1][j] + prefixSum[i][j-1] - prefixSum[i-1][j-1] + arr[i][j];
+        // 누적합 배열 생성
+        int[][] prefixSum = new int[N + 1][N + 1];
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                prefixSum[i][j] = grid[i - 1][j - 1]
+                                + prefixSum[i - 1][j]
+                                + prefixSum[i][j - 1]
+                                - prefixSum[i - 1][j - 1];
             }
         }
 
-        dy = new int[]{-K, 0, K, 0};
-        dx = new int[]{0, K, 0, -K};
+        int maxSum = 0;
+        int[] dx = {0, 1, 0, -1};
+        int[] dy = {1, 0, -1, 0};
 
-        int ans = Integer.MIN_VALUE;
+        // 모든 시작점을 탐색
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                int sum = 0;
+                boolean[][] visited = new boolean[N][N];
+                Queue<int[]> queue = new LinkedList<>();
+                queue.add(new int[]{i, j, 0});
+                visited[i][j] = true;
 
-        for(int i=1; i<N; i++){
-            for(int j=1; j<N; j++){
-                ans = Math.max(ans, solve(i, j));
+                while (!queue.isEmpty()) {
+                    int[] cur = queue.poll();
+                    int x = cur[0], y = cur[1], dist = cur[2];
+                    sum += grid[x][y];
+
+                    if (dist < K) {
+                        for (int d = 0; d < 4; d++) {
+                            int nx = x + dx[d];
+                            int ny = y + dy[d];
+
+                            if (nx >= 0 && nx < N && ny >= 0 && ny < N && !visited[nx][ny]) {
+                                visited[nx][ny] = true;
+                                queue.add(new int[]{nx, ny, dist + 1});
+                            }
+                        }
+                    }
+                }
+                maxSum = Math.max(maxSum, sum);
             }
         }
-        
-        System.out.println(ans);
-    }
 
-    static int solve(int i, int j){
-        int sum = 0;
-
-        for(int k=0; k<4; k++){
-            int ny = i + dy[k];
-            int nx = j + dx[k];
-
-            if(!inRange(ny, nx)) continue;
-
-            sum += arr[ny][nx];
-        }
-
-        if(!inRange(i-1, j-1)){
-            if(!inRange(i+1, j+1)){
-                if(!inRange(i+1, j)) sum += getAreaSum(i-1, j, i, j+1);
-                else sum += getAreaSum(i, j-1, i+1, j);
-            }
-            else sum += getAreaSum(i, j, i+1, j+1);
-        }
-        else if(!inRange(i+1, j+1)) sum += getAreaSum(i-1, j-1, i, j);
-        else sum += getAreaSum(i-1, j-1, i+1, j+1);
-
-        return sum;
-    }
-
-    static boolean inRange(int y, int x){
-        return (y>=1&&y<N) && (x>=1&&x<N);
-    }
-
-    static int getAreaSum(int x1, int y1, int x2, int y2){
-        return prefixSum[x2][y2] - prefixSum[x1-1][y2] - prefixSum[x2][y1-1] + prefixSum[x1-1][y1-1];
+        System.out.println(maxSum);
     }
 }
