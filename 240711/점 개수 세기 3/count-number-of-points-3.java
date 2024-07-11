@@ -1,37 +1,67 @@
-import java.util.*;
-import java.io.*;
+import java.util.Scanner;
+import java.util.TreeSet;
+import java.util.HashMap;
 
-public class Main {
-    static StringBuilder sb = new StringBuilder();
+class Pair {
+    int a, b;
 
-    static int n, q;
+    public Pair(int a, int b) {
+        this.a = a;
+        this.b = b;
+    }
+}
 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+public class Main {    
+    public static final int MAX_NUM = 100000;
+    
+    // 변수 선언
+    public static int n, q;
+    public static int[] arr = new int[MAX_NUM];
+    public static Pair[] queries = new Pair[MAX_NUM];
+    
+    public static TreeSet<Integer> nums = new TreeSet<>();
+    public static HashMap<Integer, Integer> mapper = new HashMap<>();
 
-        st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        q = Integer.parseInt(st.nextToken());
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        // 입력:
+        n = sc.nextInt();
+        q = sc.nextInt();
 
-        TreeMap<Integer, Integer> treeMap = new TreeMap<>();
-
-        st = new StringTokenizer(br.readLine());
-        for(int i=1; i<=n; i++){
-            treeMap.put(Integer.parseInt(st.nextToken()), i);
+        for(int i = 0; i < n; i++)
+            arr[i] = sc.nextInt();
+        
+        for(int i = 0; i < q; i++) {
+            int a = sc.nextInt();
+            int b = sc.nextInt();
+            queries[i] = new Pair(a, b);
         }
 
-        for(int Q=0; Q<q; Q++){
-            st = new StringTokenizer(br.readLine());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-
-            int ceilingCnt = treeMap.get(treeMap.ceilingKey(x)) == null ? 0 : treeMap.get(treeMap.ceilingKey(y));
-            int floorCnt = treeMap.get(treeMap.floorKey(y)) == null ? 0 : treeMap.get(treeMap.floorKey(x));
-
-            sb.append(ceilingCnt-floorCnt+1+"\n");
+        // 주어진 x좌표값들을 전부 treeset에 넣어줍니다.
+        for(int i = 0; i < n; i++)
+            nums.add(arr[i]);
+        
+        // treeset에서 정점을 작은 번호부터 뽑으면서
+        // 각 정점별로 1번부터 순서대로 매칭하여
+        // 그 결과를 hashmap에 넣어줍니다.
+        int cnt = 1;
+        for(Integer num : nums) {
+            mapper.put(num, cnt);
+            cnt++;
         }
+        
+        // 질의에 대해
+        // 각 [a, b]에 해당하는 번호를
+        // mapper를 통해 구해
+        // 두 번호 사이의 점의 수를 출력합니다.
+        for(int i = 0; i < q; i++) {
+            int a = queries[i].a;
+            int b = queries[i].b;
 
-        System.out.println(sb);
+            int newA = mapper.get(a);
+            int newB = mapper.get(b);
+
+            System.out.println(newB - newA + 1);
+        }
     }
 }
