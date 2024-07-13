@@ -22,7 +22,7 @@ public class Main {
             }
         }
 
-        if(n==1) ans = 1;
+        if(n==1) ans = 2;
         else solve();
         System.out.println(ans);
     }
