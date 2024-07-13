@@ -40,7 +40,10 @@ public class Main {
             // 행 확인
             for(int j=1; j<n; j++){
                 if(arr[i][j] == prev) cnt++;
-                else cnt=1;
+                else {
+                    prev = arr[i][j];
+                    cnt=1;
+                }
 
                 if(cnt==m) {
                     ans++;
@@ -53,7 +56,10 @@ public class Main {
             // 열 확인
             for(int j=1; j<n; j++){
                 if(arr[j][i] == prev) cnt++;
-                else cnt=1;
+                else {
+                    prev = arr[j][i];
+                    cnt=1;
+                }
 
                 if(cnt==m) {
                     ans++;
