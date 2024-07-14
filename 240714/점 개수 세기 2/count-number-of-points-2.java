@@ -81,16 +81,16 @@ public class Main {
     }
 
     static int getCeilingValue(int x){
-        if(map.ceilingKey(x) == null) return set.size()+1;
+        if(set.ceiling(x) == null) return set.size()+1;
 
-        int newX = map.ceilingKey(x);
+        int newX = set.ceiling(x);
         return map.get(newX);
     }
 
     static int getFlooringValue(int x){
-        if(map.floorKey(x) == null) return 0;
+        if(set.floor(x) == null) return 0;
 
-        int newX = map.floorKey(x);
+        int newX = set.floor(x);
         return map.get(newX);
     }
 
