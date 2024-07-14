@@ -56,7 +56,7 @@ public class Main {
                     int cnt = sum;
                     sum *= M;
 
-                    if(getCalcK(k)<sum) ans = Math.max(ans, cnt);
+                    if(getCalcK(k)<=sum) ans = Math.max(ans, cnt);
                 }
             }
         }
