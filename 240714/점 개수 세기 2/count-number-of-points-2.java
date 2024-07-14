@@ -47,7 +47,7 @@ public class Main {
             map.put(i, cnt++);
         }
 
-        preifxSum = new int[2502][2502];
+        preifxSum = new int[5002][5002];
 
         for(Point i : p){
             int x = map.get(i.x);
