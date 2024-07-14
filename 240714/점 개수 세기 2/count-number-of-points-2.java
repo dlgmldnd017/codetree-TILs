@@ -14,7 +14,7 @@ public class Main {
     static StringBuilder sb = new StringBuilder();
 
     static int N, Q;
-    static int arr[][], preifxSum[][];
+    static int preifxSum[][];
 
     static Point p[];
 
@@ -47,19 +47,18 @@ public class Main {
             map.put(i, cnt++);
         }
 
-        arr = new int[2501][2501];
         preifxSum = new int[2502][2502];
 
         for(Point i : p){
             int x = map.get(i.x);
             int y = map.get(i.y);
 
-            arr[x][y] = 1;
+            preifxSum[x][y]++;
         }
 
         for(int i=1; i<=cnt; i++){
             for(int j=1; j<=cnt; j++){
-                preifxSum[i][j] = preifxSum[i][j-1] + preifxSum[i-1][j] - preifxSum[i-1][j-1] + arr[i][j];
+                preifxSum[i][j] += preifxSum[i][j-1] + preifxSum[i-1][j] - preifxSum[i-1][j-1];
             }
         }
 
