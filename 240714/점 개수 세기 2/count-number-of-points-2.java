@@ -1,0 +1,101 @@
+import java.util.*;
+import java.io.*;
+
+class Point{
+    int x, y;
+
+    public Point(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+}
+
+public class Main {
+    static StringBuilder sb = new StringBuilder();
+
+    static int N, Q;
+    static int arr[][], preifxSum[][];
+
+    static Point p[];
+
+    static TreeSet<Integer> set = new TreeSet<>();
+    static TreeMap<Integer, Integer> map = new TreeMap<>();
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        Q = Integer.parseInt(st.nextToken());
+
+        p = new Point[N];
+
+        for(int i=0; i<N; i++){
+            st = new StringTokenizer(br.readLine());
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
+
+            set.add(x);
+            set.add(y);
+
+            p[i] = new Point(x, y);
+        }
+
+        int cnt=1;
+        for(Integer i : set){
+            map.put(i, cnt++);
+        }
+
+        arr = new int[N*2+1][N*2+1];
+        preifxSum = new int[N*2+2][N*2+2];
+
+        for(Point i : p){
+            int x = map.get(i.x);
+            int y = map.get(i.y);
+
+            arr[x][y] = 1;
+        }
+
+        for(int i=1; i<=N*2; i++){
+            for(int j=1; j<=N*2; j++){
+                preifxSum[i][j] = preifxSum[i][j-1] + preifxSum[i-1][j] - preifxSum[i-1][j-1] + arr[i][j];
+            }
+        }
+
+        for(int q=0; q<Q; q++){
+            st = new StringTokenizer(br.readLine());
+            int x1 = Integer.parseInt(st.nextToken());
+            int y1 = Integer.parseInt(st.nextToken());
+            int x2 = Integer.parseInt(st.nextToken());
+            int y2 = Integer.parseInt(st.nextToken());
+
+            x1 = getCeilingValue(x1);
+            y1 = getCeilingValue(y1);
+            x2 = getFlooringValue(x2);
+            y2 = getFlooringValue(y2);
+
+            sb.append(getSum(x1, y1, x2, y2)+"\n");
+        }
+
+        System.out.println(sb);
+    }
+
+    static int getCeilingValue(int x){
+        if(map.ceilingKey(x) == null) return set.size()+1;
+
+        int newX = map.ceilingKey(x);
+        return map.get(newX);
+    }
+
+    static int getFlooringValue(int x){
+        if(map.floorKey(x) == null) return 0;
+
+        int newX = map.floorKey(x);
+        return map.get(newX);
+    }
+
+    static int getSum(int x1, int y1, int x2, int y2){
+        return preifxSum[x2][y2] - preifxSum[x1-1][y2] - preifxSum[x2][y1-1] + preifxSum[x1-1][y1-1];
+    }
+}
