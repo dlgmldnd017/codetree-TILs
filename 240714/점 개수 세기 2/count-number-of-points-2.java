@@ -81,17 +81,21 @@ public class Main {
     }
 
     static int getCeilingValue(int x){
-        if(set.ceiling(x) == null) return set.size()+1;
-
-        int newX = set.ceiling(x);
-        return map.get(newX);
+        if(set.ceiling(x) != null){
+            int newX = set.ceiling(x);
+            return map.get(newX);
+        } 
+        
+        return set.size()+1;
     }
 
     static int getFlooringValue(int x){
-        if(set.floor(x) == null) return 0;
+        if(set.floor(x) != null) {
+            int newX = set.floor(x);
+            return map.get(newX);
+        }
 
-        int newX = set.floor(x);
-        return map.get(newX);
+        return 0;
     }
 
     static int getSum(int x1, int y1, int x2, int y2){
