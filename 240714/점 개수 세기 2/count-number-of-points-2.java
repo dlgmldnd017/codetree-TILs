@@ -47,8 +47,8 @@ public class Main {
             map.put(i, cnt++);
         }
 
-        arr = new int[N*2+1][N*2+1];
-        preifxSum = new int[N*2+2][N*2+2];
+        arr = new int[2501][2501];
+        preifxSum = new int[2502][2502];
 
         for(Point i : p){
             int x = map.get(i.x);
@@ -57,8 +57,8 @@ public class Main {
             arr[x][y] = 1;
         }
 
-        for(int i=1; i<=N*2; i++){
-            for(int j=1; j<=N*2; j++){
+        for(int i=1; i<=cnt; i++){
+            for(int j=1; j<=cnt; j++){
                 preifxSum[i][j] = preifxSum[i][j-1] + preifxSum[i-1][j] - preifxSum[i-1][j-1] + arr[i][j];
             }
         }
