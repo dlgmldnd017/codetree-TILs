@@ -2,11 +2,11 @@ import java.util.*;
 import java.io.*;
 
 class Point implements Comparable<Point>{
-    int x, y;
+    int y, x;
 
-    public Point(int x, int y){
-        this.x = x;
+    public Point(int y, int x){
         this.y = y;
+        this.x = x;
     }
 
     public int compareTo(Point p){
@@ -34,7 +34,7 @@ public class Main {
             int x = Integer.parseInt(st.nextToken());
             int y = Integer.parseInt(st.nextToken());
 
-            set.add(new Point(x, y));
+            set.add(new Point(y, x));
         }
 
         for(int q=0; q<Q; q++){
@@ -44,7 +44,7 @@ public class Main {
             int x2 = Integer.parseInt(st.nextToken());
             int y2 = Integer.parseInt(st.nextToken());
 
-            NavigableSet<Point> ns = set.subSet(new Point(x1, y1), true, new Point(x2, y2), true);
+            NavigableSet<Point> ns = set.subSet(new Point(y1, x1), true, new Point(y2, x2), true);
 
             int cnt=0;
             for(Point p : ns){
