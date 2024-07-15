@@ -2,7 +2,9 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int N, L[], R[], ans;
+    static int N, L[], R[];
+    static Long ans;
+    
     static String input;
 
     public static void main(String[] args) throws Exception {
