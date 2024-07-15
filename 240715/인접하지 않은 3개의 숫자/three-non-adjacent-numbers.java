@@ -2,8 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int N, ans;
-    static int arr[], dp[][];
+    static int N, arr[], L[], R[], ans;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -11,10 +10,10 @@ public class Main {
 
         N = Integer.parseInt(br.readLine());
 
-        arr = new int[N+1];
-
+        arr = new int[N];
+        
         st = new StringTokenizer(br.readLine());
-        for(int i=1; i<=N; i++){
+        for(int i=0; i<N; i++){
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
@@ -24,20 +23,22 @@ public class Main {
     }
 
     static void solve(){
-        dp = new int[5][N+1];
+        L = new int[N];
+        L[0] = arr[0];
 
-        dp[1][1] = arr[1];
-
-        for(int i=1; i<=3; i++){
-            for(int j=2*i-1; j<=N; j++){
-                if(j<2){
-                    dp[i][j] = arr[j];
-                    continue;
-                }
-                dp[i][j] = Math.max(dp[i][j-1], dp[i-1][j-2] + arr[j]);
-            }
+        for(int i=1; i<N; i++){
+            L[i] = Math.max(L[i-1], arr[i]);
         }
 
-        ans = dp[3][N];
+        R = new int[N];
+        R[N-1] = arr[N-1];
+
+        for(int i=N-2; i>=0; i--){
+            R[i] = Math.max(R[i+1], arr[i]);
+        }
+
+        for(int i=2; i<N-2; i++){
+            ans = Math.max(ans, L[i-2] + arr[i] + R[i+2]);
+        }
     }
 }
