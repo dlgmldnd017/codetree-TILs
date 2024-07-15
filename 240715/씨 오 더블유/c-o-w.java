@@ -2,9 +2,9 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int N, L[], R[];
-    static Long ans;
-    
+    static int N;
+    static long L[], R[], ans;
+
     static String input;
 
     public static void main(String[] args) throws Exception {
@@ -21,7 +21,7 @@ public class Main {
     }
 
     static void solve(){
-        L = new int[N];
+        L = new long[N];
         if(input.charAt(0)=='C') L[0] = 1;
 
         for(int i=1; i<N; i++){
@@ -30,7 +30,7 @@ public class Main {
             if(input.charAt(i)=='C') L[i] += 1;
         }
 
-        R = new int[N];
+        R = new long[N];
         if(input.charAt(N-1)=='W') R[N-1] = 1;
 
         for(int i=N-2; i>=0; i--){
