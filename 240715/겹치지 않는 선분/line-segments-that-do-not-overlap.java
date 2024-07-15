@@ -44,6 +44,7 @@ public class Main {
     static void solve(){
         L = new int[N+1];
 
+        L[0] = Integer.MIN_VALUE;
         for(int i=1; i<=N; i++){
             L[i] = Math.max(L[i-1], p[i].x2);
         }
