@@ -34,22 +34,31 @@ public class Main {
                 left[i] = left[i - 1];
             }
 
+            rv += a[n - i];
+            if (rv == s / 4) {
+                right[n - i] = right[n - i + 1] + 1;
+            } else {
+                right[n - i] = right[n - i + 1];
+            }
+
             if (lv == s / 2 && i >= 2 && i <= n - 2) {
                 center.add(i);
             }
         }
 
-        for(int i = n-1; i>=1; i--){
-            rv += a[i];
-            if (rv == s / 4) {
-                right[i] = right[i + 1] + 1;
-            } else {
-                right[i] = right[i + 1];
-            }
-        }
+        // for(int i : left){
+        //     System.out.print(i+" ");
+        // }
+        // System.out.println();
+
+        // for(int i : right){
+        //     System.out.print(i+" ");
+        // }
+        // System.out.println();
 
         int ans = 0;
         for (int ct : center) {
+            // System.out.println(ct);
             ans += left[ct - 1] * right[ct + 1];
         }
 
