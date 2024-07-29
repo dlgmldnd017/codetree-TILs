@@ -55,15 +55,15 @@ public class Main {
     }
 
     static void solve(){
-        int cnt = 0, cur = 0;
+        int cnt=0, cur=0;
 
         for(Point p : list){
-            if(cnt>=2 && p.v == -1){
-                ans += Math.abs(cur-p.x);
+            if(cnt>=2){
+                ans += p.x - cur;
             }
 
-            cnt += p.v;
             cur = p.x;
+            cnt += p.v;
         }
     }
 }
