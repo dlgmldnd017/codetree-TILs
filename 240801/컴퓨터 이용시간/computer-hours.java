@@ -17,7 +17,7 @@ class Point implements Comparable<Point>{
 
 public class Main {
     static int N, ans[];
-    static boolean visited[];
+    public static PriorityQueue<Integer> pq = new PriorityQueue<>();
     static List<Point> list = new ArrayList<>();
     static StringBuilder sb = new StringBuilder();
 
@@ -28,7 +28,10 @@ public class Main {
         N = Integer.parseInt(br.readLine());
 
         ans = new int[N+1];
-        visited = new boolean[N+1];
+
+        for(int i=1; i<=N; i++){
+            pq.add(i);
+        }
 
         for(int i=1; i<=N; i++){
             st = new StringTokenizer(br.readLine());
@@ -54,17 +57,10 @@ public class Main {
 
         for(Point p : list){
             if(p.v == -1){
-                visited[ans[p.index]] = false;
+                pq.add(ans[p.index]);
             }
             else{
-                for(int i=1; i<=N; i++){
-                   if(!visited[i]){
-                       visited[i] = true;
-                       cnt = i;
-                       break;
-                   }
-                }
-
+                cnt = pq.poll();
                 ans[p.index] = cnt;
             }
         }
