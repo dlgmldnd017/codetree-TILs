@@ -1,93 +1,88 @@
 import java.util.*;
 import java.io.*;
 
-public class Main {
+class Point implements Comparable<Point>{
+    int x, y, v, idx;
 
-    public static class Pair implements Comparable<Pair>{
-        int a;
-        int b;
-        int y;
-        int idx;
-
-        Pair(int a,int b,int y,int idx){
-            this.a=a;
-            this.b=b;
-            this.y=y;
-            this.idx=idx;
-        }
-
-        @Override
-        public int compareTo(Pair p){
-            return this.a- p.a;
-        }
+    public Point(int x, int y, int v, int idx){
+        this.x = x;
+        this.y = y;
+        this.v = v;
+        this.idx = idx;
     }
 
-    public static void main(String[] args) throws IOException{
+    public int compareTo(Point p){
+        return this.x - p.x;
+    }
+}
 
+class Element implements Comparable<Element> {
+    int y, idx;
+
+    public Element(int y, int idx) {
+        this.y = y;
+        this.idx = idx;
+    }
+
+    public int compareTo(Element e) {
+        return this.y - e.y;        
+    }
+}
+
+public class Main {
+    static int N, ans;
+    static boolean visible[];
+    static List<Point> list = new ArrayList<>();
+    static TreeSet<Element> set = new TreeSet<>();
+
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
-        int N = Integer.parseInt(br.readLine());
+        N = Integer.parseInt(br.readLine());
+        visible = new boolean[N+1];
 
-        ArrayList<Pair> pair = new ArrayList<>();
-
-        PriorityQueue<Integer> queue = new PriorityQueue<>();
-
-        boolean[] checked = new boolean[N];
-        int controalTower =-1;
-        for(int i=0; i<N; i++){
-            StringTokenizer st = new StringTokenizer(br.readLine());
-
+        for(int i=1; i<=N; i++){
+            st = new StringTokenizer(br.readLine());
             int y = Integer.parseInt(st.nextToken());
             int x1 = Integer.parseInt(st.nextToken());
             int x2 = Integer.parseInt(st.nextToken());
 
-            pair.add(new Pair(x1,y,1,i));
-            pair.add(new Pair(x2,y,-1,i));
+            list.add(new Point(x1, y, +1, i));
+            list.add(new Point(x2, y, -1, i));
         }
-        Collections.sort(pair);
 
-        TreeMap<Integer,Integer> tMap = new TreeMap<>(); 
-        
-        int minIdx=0;
-        for(int i=0; i<N*2; i++){
-            int xDot = pair.get(i).a;
-            int yDot = pair.get(i).b;
-            int loc = pair.get(i).y;
-            int idx = pair.get(i).idx;
+        Collections.sort(list);
 
-            if(loc==1){
-                //첫 선분인가?
-                if(tMap.size()==0){ 
-                    checked[idx]=true;
-                }
-                else if(tMap.firstKey()>yDot){
-                    checked[idx]=true;
-                }                
+        solve();
 
-                tMap.put(yDot,idx);
+        System.out.println(ans);
+    }
 
-            }else{
-                tMap.remove(yDot);
-                
-                if(tMap.size()!=0){
-                    if(!checked[tMap.get(tMap.firstKey())]){
-                        checked[tMap.get(tMap.firstKey())]=true;
-                    }
-                }else{
-                    if(!checked[idx]){
-                        checked[idx]=true;
-                    }
-                }
+    static void solve(){
+        // 모든 선분 체크
+        for(Point p : list){
 
-
+            // 삽입할 때
+            if(p.v == +1){
+                set.add(new Element(p.y, p.idx));
             }
-        }
-        int count=0;
-        for(int i=0; i<N; i++){
-            if(checked[i]){
-                count++;
+
+            // 제거할 때
+            else{
+                set.remove(new Element(p.y, p.idx));
             }
+
+            // 마지막 선분이라면
+            if(set.isEmpty()) continue;
+
+            // 보이는 선분의 idx true 체크
+            visible[set.first().idx] = true;
         }
-        System.out.println(count);
+
+        // 보였던 선분 체크
+        for(boolean i : visible){
+            if(i) ans++;
+        }
     }
 }
