@@ -1,55 +1,77 @@
 import java.util.*;
+import java.io.*;
+
+class Point implements Comparable<Point>{
+    int x, v, idx;
+
+    public Point(int x, int v, int idx){
+        this.x = x;
+        this.v = v;
+        this.idx = idx;
+    }
+
+    public int compareTo(Point p){
+        return this.x - p.x;
+    }
+}
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        int[][] points = new int[n][2];
-        
-        for (int i = 0; i < n; i++) {
-            points[i][0] = scanner.nextInt();
-            points[i][1] = scanner.nextInt();
-        }
-        
-        Arrays.sort(points, Comparator.comparingInt(a -> a[0]));
+    static int N, total, prevX, minLength, weight[], ans;
+    static List<Point> list = new ArrayList<>();
+    static TreeSet<Integer> set = new TreeSet<>();
 
-        int[] L = new int[n];
-        int[] R = new int[n];
-        
-        L[0] = points[0][1] - points[0][0];
-        R[n - 1] = points[n - 1][1] - points[n - 1][0];
-        
-        for (int i = 1; i < n; i++) {
-            if (isOverlap(points[i - 1], points[i])) {
-                L[i] = L[i - 1] + points[i][1] - points[i - 1][1];
-            } else {
-                L[i] = L[i - 1] + points[i][1] - points[i][0];
-            }
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        N = Integer.parseInt(br.readLine());
+        weight = new int[N+1];
+
+        for(int i=1; i<=N; i++){
+            st = new StringTokenizer(br.readLine());
+            int x1 = Integer.parseInt(st.nextToken());
+            int x2 = Integer.parseInt(st.nextToken());
+
+            list.add(new Point(x1, +1, i));
+            list.add(new Point(x2, -1, i));
         }
-        
-        for (int i = n - 2; i >= 0; i--) {
-            if (isOverlap(points[i], points[i + 1])) {
-                R[i] = R[i + 1] + points[i + 1][0] - points[i][0];
-            } else {
-                R[i] = R[i + 1] + points[i][1] - points[i][0];
-            }
-        }
-        
-        int ans = -1;
-        
-        for (int i = 1; i < n - 1; i++) {
-            ans = Math.max(ans, L[i - 1] + R[i + 1]);
-        }
-        
-        ans = Math.max(ans, R[1]);
-        ans = Math.max(ans, L[n - 2]);
-        
+
+        Collections.sort(list);
+
+        total=0;
+        prevX=-1;
+        minLength = Integer.MAX_VALUE;
+
+        solve();
+
         System.out.println(ans);
     }
-    
-    public static boolean isOverlap(int[] p1, int[] p2) {
-        int s1 = p1[0], e1 = p1[1];
-        int s2 = p2[0], e2 = p2[1];
-        return e1 > s2;
+
+    static void solve(){
+        for(Point p : list){
+            if(set.size()>0){
+                total += p.x - prevX;
+            }
+
+            if(set.size()==1){
+                int targetIdx = set.first();
+                weight[targetIdx] = p.x - prevX;
+            }
+
+            if(p.v == +1){
+                set.add(p.idx);
+            }
+            else{
+                set.remove(p.idx);
+            }
+
+            prevX = p.x;
+        }
+
+        for(int i=1; i<=N; i++){
+            minLength = Math.min(minLength, weight[i]);
+        }
+
+        ans = total - minLength;
     }
 }
