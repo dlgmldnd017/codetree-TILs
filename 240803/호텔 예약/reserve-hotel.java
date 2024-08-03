@@ -10,7 +10,7 @@ class Point implements Comparable<Point>{
     }
 
     public int compareTo(Point p){
-        if(this.x == p.x) return this.v - p.v;
+        if(this.x == p.x) return p.v-this.v;
         return this.x - p.x;
     }
 }
