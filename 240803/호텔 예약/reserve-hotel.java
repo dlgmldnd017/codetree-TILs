@@ -54,7 +54,7 @@ public class Main {
                 cnt--;
             }
 
-            if(p.v==1 && cnt>1) ans++;
+            if(p.v==1 && cnt>1) ans = Math.max(ans, cnt);
         }
     }
 }
