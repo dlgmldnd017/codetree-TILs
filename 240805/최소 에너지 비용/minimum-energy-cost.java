@@ -2,7 +2,8 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int N, moveCost[], fillCost[], ans;
+    static int N, moveCost[], fillCost[];
+    static long ans;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -30,7 +31,7 @@ public class Main {
     }
 
     static void solve(){
-        int minFillCost = fillCost[0];
+        long minFillCost = fillCost[0];
 
         for(int i=0; i<N-1; i++){
             ans += minFillCost * moveCost[i];
