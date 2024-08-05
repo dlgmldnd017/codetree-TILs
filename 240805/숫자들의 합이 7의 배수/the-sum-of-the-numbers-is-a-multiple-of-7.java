@@ -12,17 +12,17 @@ public class Main {
         }
         
         // 누적 합 배열과 나머지 배열을 준비
-        int[] prefixSums = new int[N + 1];
+        long[] prefixSums = new long[N + 1];
         for (int i = 0; i < N; i++) {
             prefixSums[i + 1] = prefixSums[i] + nums[i];
         }
         
         int maxLen = 0;
-        Map<Integer, Integer> remainderMap = new HashMap<>();
+        Map<Long, Integer> remainderMap = new HashMap<>();
         
         // 나머지 배열을 계산
         for (int i = 0; i <= N; i++) {
-            int remainder = prefixSums[i] % 7;
+            long remainder = prefixSums[i] % 7;
             if (remainder < 0) remainder += 7;
             
             if (remainderMap.containsKey(remainder)) {
