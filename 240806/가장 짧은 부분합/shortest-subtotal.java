@@ -33,17 +33,14 @@ public class Main {
 
         for(int i=1; i<=N; i++){
 
-            while(j+1<=N && sum+Arr[j+1]<S){
+            while(j+1<=N && sum<S){
                 sum += Arr[j+1];
                 j++;
             }
 
-            if(j+1<=N && sum<S){
-                sum += Arr[j+1];
-                j++;
-            }
+            if(sum<S) break;
 
-            if(sum>=S) ans = Math.min(ans, j-i+1);
+            ans = Math.min(ans, j-i+1);
 
             sum -= Arr[i];
         }
