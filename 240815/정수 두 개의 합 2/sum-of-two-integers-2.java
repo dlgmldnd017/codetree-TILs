@@ -1,37 +1,39 @@
-import java.util.*;
-import java.io.*;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
-    static int N, K, A[], ans;
-
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-
-        st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        K = Integer.parseInt(st.nextToken());
-
-        A = new int[N+1];
-
-        for(int i=1; i<=N; i++){
-            A[i] = Integer.parseInt(br.readLine());
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        int n = scanner.nextInt();
+        int k = scanner.nextInt();
+        int[] arr = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
         }
-
-        solve();
-
-        System.out.println(ans);
-    }
-
-    static void solve(){
-        int i = 2;
-
-        for(int j=1; j<=N; j++){
-            while(i<=N && (A[i] + A[j]) > K){
-                i++;
+        
+        // 배열을 오름차순으로 정렬
+        Arrays.sort(arr);
+        
+        int left = 0;
+        int right = n - 1;
+        int count = 0;
+        
+        // 투 포인터로 가능한 쌍의 수를 계산
+        while (left < right) {
+            int sum = arr[left] + arr[right];
+            if (sum <= k) {
+                // 왼쪽 포인터를 하나 증가시키면서 가능한 쌍의 수를 계산
+                count += (right - left);
+                left++;
+            } else {
+                // 합이 k보다 크면, 오른쪽 포인터를 하나 줄여서 더 작은 합을 시도
+                right--;
             }
-
-            if(i<=N && (A[i] + A[j]) <= K) ans++;
         }
+        
+        // 결과 출력
+        System.out.println(count);
     }
 }
