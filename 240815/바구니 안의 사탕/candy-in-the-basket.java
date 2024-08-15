@@ -1,41 +1,68 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
+import java.io.*;
+
+class Candy implements Comparable<Candy>{
+    int x, cnt;
+
+    public Candy(int x, int cnt){
+        this.x = x;
+        this.cnt = cnt;
+    }
+
+    public int compareTo(Candy c){
+        return this.x - c.x;
+    }
+}
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    static int N, K, ans;
+    static Candy[] candies;
 
-        int N = scanner.nextInt();
-        int K = scanner.nextInt();
-        int[][] baskets = new int[N][2];
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
-        for (int i = 0; i < N; i++) {
-            baskets[i][0] = scanner.nextInt(); // 사탕의 개수
-            baskets[i][1] = scanner.nextInt(); // 바구니의 위치
+        st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
+
+        candies = new Candy[N+1];
+
+        for(int i=1; i<=N; i++){
+            st = new StringTokenizer(br.readLine());
+            int cnt = Integer.parseInt(st.nextToken());
+            int x = Integer.parseInt(st.nextToken());
+
+            candies[i] = new Candy(x, cnt);
         }
 
-        // 바구니 위치를 기준으로 정렬
-        Arrays.sort(baskets, (a, b) -> Integer.compare(a[1], b[1]));
+        Arrays.sort(candies, 1, N+1);
 
-        int left = 0;
-        int right = 0;
-        int currentCandies = 0;
-        int maxCandies = 0;
+        solve();
 
-        // 투 포인터로 최대 사탕 수 구하기
-        while (right < N) {
-            // 현재 구간 [baskets[left][1], baskets[right][1]]의 길이가 2K 이하인지 확인
-            if (baskets[right][1] - baskets[left][1] <= 2 * K) {
-                currentCandies += baskets[right][0];
-                maxCandies = Math.max(maxCandies, currentCandies);
-                right++;
-            } else {
-                currentCandies -= baskets[left][0];
-                left++;
+        System.out.println(ans);
+    }
+
+    static void solve(){
+        int j=1, sum=0;
+
+        for(int i=1; i<=N; i++){
+            while(j<=N && getXOfCandy(j)-getXOfCandy(i) <= 2*K){
+                sum += getCntOfCandy(j);
+                j++;
             }
-        }
 
-        // 결과 출력
-        System.out.println(maxCandies);
+            ans = Math.max(ans, sum);
+
+            sum -= getCntOfCandy(i);
+        }
+    }
+
+    static int getXOfCandy(int idx){
+        return candies[idx].x;
+    }
+
+    static int getCntOfCandy(int idx){
+        return candies[idx].cnt;
     }
 }
