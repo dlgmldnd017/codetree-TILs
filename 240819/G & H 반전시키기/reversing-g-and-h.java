@@ -1,31 +1,36 @@
-import java.util.Scanner;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    static int N, ans;
+    static String init, target;
 
-        // 입력 받기
-        int N = scanner.nextInt();
-        String initial = scanner.next();
-        String target = scanner.next();
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        // 초기 변수 설정
-        int count = 0;
+        N = Integer.parseInt(br.readLine());
+
+        init = br.readLine();
+        target = br.readLine();
+
+        solve();
+
+        System.out.println(ans);
+    }
+
+    static void solve(){
         boolean inSegment = false;
 
-        // 초기 문자열과 목표 문자열을 비교하면서 구간 계산
-        for (int i = 0; i < N; i++) {
-            if (initial.charAt(i) != target.charAt(i)) {
-                if (!inSegment) {
-                    count++;
+        for(int i=0; i<N; i++){
+            if(init.charAt(i) != target.charAt(i)){
+                if(!inSegment){
+                    ans++;
                     inSegment = true;
                 }
-            } else {
+            }
+            else{
                 inSegment = false;
             }
         }
-
-        // 결과 출력
-        System.out.println(count);
     }
 }
