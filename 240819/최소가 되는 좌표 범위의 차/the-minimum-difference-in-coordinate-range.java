@@ -24,9 +24,9 @@ class TargetPoint implements Comparable<TargetPoint> {
 
     @Override
     public int compareTo(TargetPoint p) {
-        if(this.y != p.y)
-            return this.y - p.y;            
-        return this.x - p.x;                   
+        if(this.y == p.y)
+            return this.x - p.x;
+        return this.y-p.y;
     }
 }
 
@@ -60,22 +60,22 @@ public class Main {
         solve();
 
         if(ans == Integer.MAX_VALUE) ans = -1;
-        
+
         System.out.println(ans);
     }
 
     static void solve(){
-        int j=0;
+        int j=1;
 
         for(int i=1; i<=N; i++){
-            while(j+1<=N && getMax() - getMin() < D){
-                pCnt.add(new TargetPoint(p[j+1].x, p[j+1].y));
+            while(j<=N && getMax() - getMin() < D){
+                pCnt.add(new TargetPoint(p[j].x, p[j].y));
                 j++;
             }
-            
+
             if(getMax() - getMin() < D) break;
 
-            ans = Math.min(ans, p[j].x - p[i].x);
+            ans = Math.min(ans, p[j-1].x - p[i].x);
 
             pCnt.remove(new TargetPoint(p[i].x, p[i].y));
         }
