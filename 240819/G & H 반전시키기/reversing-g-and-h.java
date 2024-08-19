@@ -1,64 +1,31 @@
-import java.util.*;
-import java.io.*;
+import java.util.Scanner;
 
 public class Main {
-    static int N, ans;
-    static char c1[], c2[];
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String str;
+        // 입력 받기
+        int N = scanner.nextInt();
+        String initial = scanner.next();
+        String target = scanner.next();
 
-        N = Integer.parseInt(br.readLine());
+        // 초기 변수 설정
+        int count = 0;
+        boolean inSegment = false;
 
-        c1 = new char[N+1];
-        c2 = new char[N+1];
-
-        str = br.readLine();
-        for(int i=1; i<=N; i++){
-            c1[i] = str.charAt(i-1);
-        }
-
-        str = br.readLine();
-        for(int i=1; i<=N; i++){
-            c2[i] = str.charAt(i-1);
-        }
-
-        solve();
-
-        System.out.println(ans);
-    }
-
-    static void solve(){
-        boolean isChanged = false;
-        char c = 'G';
-
-		while(true){    
-            for(int i=1; i<=N; i++){
-                if(c1[i] == c2[i]) continue;
-
-                if(c1[i] == c) {
-                    isChanged = true;
-                    c1[i] = c2[i];
+        // 초기 문자열과 목표 문자열을 비교하면서 구간 계산
+        for (int i = 0; i < N; i++) {
+            if (initial.charAt(i) != target.charAt(i)) {
+                if (!inSegment) {
+                    count++;
+                    inSegment = true;
                 }
+            } else {
+                inSegment = false;
             }
-
-            if(isChanged) {
-                ans++;
-                isChanged = false;
-            }
-
-            c = c=='G'? 'H' : 'G';
-
-            if(check()) break;
-        }
-    }
-
-    static boolean check(){
-        for(int i=1; i<=N; i++){
-            if(c1[i] != c2[i]) return false;
         }
 
-        return true;
+        // 결과 출력
+        System.out.println(count);
     }
 }
