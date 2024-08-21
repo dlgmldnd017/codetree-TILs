@@ -24,7 +24,7 @@ public class Main {
         for(int j=0; j<N; j++){
             char c = str.charAt(j);
 
-            if(map.containsKey(c)) i = map.get(c)+1;
+            if(map.containsKey(c)) i = Math.max(i, map.get(c)+1);
 
             map.put(c, j);
 
