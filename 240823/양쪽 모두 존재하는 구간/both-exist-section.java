@@ -2,48 +2,64 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int N, M, arr[], ans;
-    static Map<Integer, Integer> map = new HashMap<>();
-
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        int[] arr = new int[n];
         st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-
-        arr = new int[N + 1];
-
-        st = new StringTokenizer(br.readLine());
-        for (int i = 1; i <= N; i++) {
+        for (int i = 0; i < n; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        ans = Integer.MAX_VALUE;
+        int minLength = Integer.MAX_VALUE;
 
-        solve();
-
-        if (ans == Integer.MAX_VALUE) ans = -1;
-
-        System.out.println(ans);
-    }
-
-    static void solve() {
-        int i = 1;
-
-        for (int j = 1; j <= N; j++) {
-            map.put(arr[j], map.getOrDefault(arr[j], 0) + 1);
-
-            while (map.size() == M) {
-                ans = Math.min(ans, j - i + 1);
-
-                if (map.get(arr[i]) == 1) map.remove(arr[i]);
-                else map.put(arr[i], map.get(arr[i]) - 1);
-
-                i++;
-            }
-
+        // 전체 숫자의 빈도 계산
+        int[] totalCount = new int[m + 1];
+        for (int num : arr) {
+            totalCount[num]++;
         }
+
+        int left = 0;
+        int[] windowCount = new int[m + 1];
+        int insideCount = 0; // 현재 구간 내 포함된 숫자의 종류 수
+
+        for (int right = 0; right < n; right++) {
+            int num = arr[right];
+
+            if (windowCount[num] == 0) {
+                insideCount++;
+            }
+            windowCount[num]++;
+
+            // 구간 내 모든 숫자가 존재할 때까지 왼쪽 포인터 이동
+            while (insideCount == m) {
+                // 구간 밖에서 모든 숫자가 존재하는지 확인
+                boolean isOutsideValid = true;
+                for (int i = 1; i <= m; i++) {
+                    if (totalCount[i] - windowCount[i] == 0) {
+                        isOutsideValid = false;
+                        break;
+                    }
+                }
+
+                if (isOutsideValid) {
+                    minLength = Math.min(minLength, right - left + 1);
+                }
+
+                // 윈도우 왼쪽 숫자를 제거하면서 왼쪽 포인터 이동
+                windowCount[arr[left]]--;
+                if (windowCount[arr[left]] == 0) {
+                    insideCount--;
+                }
+                left++;
+            }
+        }
+
+        // 결과 출력
+        System.out.println(minLength == Integer.MAX_VALUE ? -1 : minLength);
     }
 }
