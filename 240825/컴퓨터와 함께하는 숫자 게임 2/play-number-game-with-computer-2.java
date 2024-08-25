@@ -4,23 +4,23 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        int m = sc.nextInt();
-        int a = sc.nextInt();
-        int b = sc.nextInt();
+        long m = sc.nextInt();
+        long a = sc.nextInt();
+        long b = sc.nextInt();
 
         // 최소 횟수와 최대 횟수를 초기화
-        int minCount = Integer.MAX_VALUE;
-        int maxCount = 0;
+        long minCount = Integer.MAX_VALUE;
+        long maxCount = 0;
 
-        for (int target = a; target <= b; target++) {
-            int L = 1;
-            int R = m;
-            int count = 0;
+        for (long target = a; target <= b; target++) {
+            long L = 1;
+            long R = m;
+            long count = 0;
 
             // 이진 탐색으로 횟수를 계산
             while (L <= R) {
                 count++;
-                int mid = (L + R) / 2;
+                long mid = (L + R) / 2;
 
                 if (mid == target) {
                     break;
