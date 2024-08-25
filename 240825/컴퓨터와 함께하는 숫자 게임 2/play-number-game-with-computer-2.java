@@ -4,18 +4,19 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        long m = sc.nextInt();
-        long a = sc.nextInt();
-        long b = sc.nextInt();
+        // 'int' 대신 'long' 사용
+        long m = sc.nextLong();
+        long a = sc.nextLong();
+        long b = sc.nextLong();
 
         // 최소 횟수와 최대 횟수를 초기화
-        long minCount = Integer.MAX_VALUE;
-        long maxCount = 0;
+        int minCount = Integer.MAX_VALUE;
+        int maxCount = 0;
 
         for (long target = a; target <= b; target++) {
             long L = 1;
             long R = m;
-            long count = 0;
+            int count = 0;
 
             // 이진 탐색으로 횟수를 계산
             while (L <= R) {
