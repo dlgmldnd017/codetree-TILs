@@ -42,7 +42,5 @@ public class Main {
                 ans = Math.max(ans, longSeq);
             }
         }
-
-        if(ans==1) ans = 0;
     }
 }
