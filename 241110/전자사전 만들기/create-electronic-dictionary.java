@@ -26,8 +26,6 @@ public class Main {
 
         Arrays.sort(map);
 
-//        System.out.println(Arrays.toString(map));
-
         for (int t = 0; t < T; t++) {
             st = new StringTokenizer(br.readLine());
             k = Integer.parseInt(st.nextToken()) - 1;
@@ -43,10 +41,8 @@ public class Main {
         int low = getLowerBoundary();
         int high = getHigherBoundary();
 
-        low += k;
-
-        if (low > high) sb.append("-1\n");
-        else sb.append(mapping.get(map[low]) + "\n");
+        if (low == -1 || low + k > high) sb.append("-1\n");
+        else sb.append(mapping.get(map[low + k]) + "\n");
     }
 
     static int getLowerBoundary() {
