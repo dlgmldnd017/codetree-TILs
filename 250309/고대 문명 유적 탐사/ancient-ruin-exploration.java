@@ -37,9 +37,11 @@ public class Main {
 
     static void solve() {
         for (int t = 0; t < K; t++) {
+            List<Node> list = new ArrayList<>();
+
             int[][] originalArr = copyArr(arr);
 
-            int max = Integer.MIN_VALUE, y = -1, x = -1, n = -1;
+            int max = Integer.MIN_VALUE;
 
             for (int k = 0; k < 3; k++) {
                 for (int i = 1; i <= 3; i++) {
@@ -48,11 +50,9 @@ public class Main {
 
                         int cnt = check();
 
-                        if (max < cnt) {
+                        if (max <= cnt) {
                             max = cnt;
-                            y = i;
-                            x = j;
-                            n = k;
+                            list.add(new Node(i, j, k, cnt));
                         }
 
                         arr = copyArr(originalArr);
@@ -60,13 +60,25 @@ public class Main {
                 }
             }
 
-            rotate(y, x, n);
+            Collections.sort(list);
+
+            Node cur = list.get(0);
+
+            rotate(cur.y, cur.x, cur.num);
 
             max = getSum();
 
             if (max == 0) return;
             else sb.append(max).append(" ");
         }
+    }
+
+    static void printArr() {
+        for (int[] i : arr) {
+            for (int j : i) System.out.print(j + " ");
+            System.out.println();
+        }
+        System.out.println();
     }
 
     static int[][] copyArr(int[][] copy) {
@@ -155,7 +167,7 @@ public class Main {
 
             int i = 4, j = 0;
 
-            while (!wall.isEmpty() && j != 5) {
+            while (!wall.isEmpty()) {
                 if (arr[i][j] == 0) arr[i][j] = wall.remove(0);
 
                 i--;
@@ -164,6 +176,8 @@ public class Main {
                     i = 4;
                     j++;
                 }
+
+                if (j == 5) break;
             }
         }
     }
@@ -209,8 +223,8 @@ public class Main {
     }
 }
 
-class Node {
-    int y, x, num;
+class Node implements Comparable<Node> {
+    int y, x, num, cnt;
 
     Node(int y, int x) {
         this.y = y;
@@ -221,5 +235,23 @@ class Node {
         this.y = y;
         this.x = x;
         this.num = num;
+    }
+
+    Node(int y, int x, int num, int cnt) {
+        this.y = y;
+        this.x = x;
+        this.num = num;
+        this.cnt = cnt;
+    }
+
+    public int compareTo(Node n) {
+        if (n.cnt == this.cnt) {
+            if (this.num == n.num) {
+                if (this.x == n.x) return this.y - n.y;
+                return this.x - n.x;
+            }
+            return this.num - n.num;
+        }
+        return n.cnt - this.cnt;
     }
 }
